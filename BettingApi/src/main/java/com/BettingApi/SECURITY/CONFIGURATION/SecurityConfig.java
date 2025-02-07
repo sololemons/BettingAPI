@@ -29,6 +29,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/auth/register").permitAll()
                         .requestMatchers("/place/**").permitAll()
+                        .requestMatchers("/betslip/**").permitAll()
+                        .requestMatchers(("/bets/**")).permitAll()
 
 
                         .anyRequest().authenticated() // All other requests require authentication

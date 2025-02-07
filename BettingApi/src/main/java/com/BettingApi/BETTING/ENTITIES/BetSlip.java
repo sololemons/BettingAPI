@@ -1,4 +1,6 @@
 package com.BettingApi.BETTING.ENTITIES;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,7 +20,7 @@ public class BetSlip {
     @Column(name = "market")
     private String market;
 
-    @Column(name = "pick")
+    @Column(name = "pick" ,nullable = false)
     private String pick;
 
     @Column(name = "odds")
@@ -26,8 +28,9 @@ public class BetSlip {
 
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private betStatus status;
+    @Column(name = "status",nullable = false)
+    @JsonProperty("status")
+    private betStatus status = betStatus.PENDING_PAYOUTS;
 
     @ManyToOne
     @JoinColumn(name = "betID")  // Foreign key linking BetSlip to Bet

@@ -9,12 +9,12 @@ import com.BettingApi.BETTING.EXCEPTIONS.MarketNotFoundException;
 import com.BettingApi.BETTING.EXCEPTIONS.MatchNotFoundException;
 import com.BettingApi.BETTING.EXCEPTIONS.OddsNotFoundException;
 import com.BettingApi.BETTING.REPOSITORIES.*;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 @AllArgsConstructor
@@ -32,7 +32,7 @@ public class placeBetService {
 
 
 
-
+@Transactional
     public List<BetResponseDTO> placeBets(List<BetRequestDTO> betRequestDTOs, Long id) {
         // Fetch the user from the database
         Users user = userRepository.findById(Math.toIntExact(id))
@@ -75,24 +75,23 @@ public class placeBetService {
             // Fetch match, market, and odds based on the bet request
             MatchInfo matchInfo = getMatchInfo(betRequestDTO.getMatchId());
             String market = getMarketName(betRequestDTO.getMarketId());
-            double odds = getOdds(betRequestDTO.getOddsId());
-
-
-
-
+            double oddsValue = getOdds(betRequestDTO.getOddsId());
+            String oddType = getOddsType(betRequestDTO.getOddsId());
 
             // Create a new BetSlip and set the necessary values
             BetSlip betSlip = new BetSlip();
             betSlip.setMatchInfo(matchInfo);
             betSlip.setMarket(market);
-            betSlip.setOdds(odds);
+            betSlip.setOdds(oddsValue);
+            betSlip.setPick(oddType);
+
 
             // Add the BetSlip to the list of BetSlips
             betSlips.add(betSlip);
 
             // Update total odds and possible win
-            bet.setTotalOdds(bet.getTotalOdds() + odds); // You can adjust the logic here for total odds calculation
-            bet.setPossibleWin(bet.getPossibleWin() + (long) (betRequestDTO.getStake() * odds)); // Update possible win
+            bet.setTotalOdds(bet.getTotalOdds() + oddsValue); // You can adjust the logic here for total odds calculation
+            bet.setPossibleWin(bet.getPossibleWin() + (long) (betRequestDTO.getStake() * oddsValue)); // Update possible win
         }
 
         // Set the betSlips list to the Bet entity
@@ -135,8 +134,13 @@ public class placeBetService {
         return dto;
     }
 
+private String getOddsType(Long oddsId){
 
+    var odds = oddRepository.findById(oddsId)
+            .orElseThrow(() -> new OddsNotFoundException("Odds with ID " + oddsId + " not found"));
+    return odds.getOddType();
 
+}
 
 
 

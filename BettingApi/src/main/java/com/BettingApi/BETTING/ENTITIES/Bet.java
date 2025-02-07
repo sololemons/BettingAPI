@@ -1,4 +1,6 @@
 package com.BettingApi.BETTING.ENTITIES;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,15 +32,18 @@ public class Bet {
     private Double totalOdds;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private betStatus status;
+    @Column(name = "status", nullable = false)
+    @JsonProperty("status")
+    private betStatus status = betStatus.PENDING_PAYOUTS;
 
     @Column(name="possibleWin")
     private Long possibleWin;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "betID")
+    @JsonIgnore
     private List<BetSlip> betSlips;
+
 
     @ManyToOne
     @JoinColumn(name = "userid")

@@ -13,4 +13,5 @@ public class BetslipDTO {
     private String pick;
     private double odds;
     private betStatus status;
+
 }
