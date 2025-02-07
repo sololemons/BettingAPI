@@ -8,7 +8,7 @@ import lombok.Data;
 public class BetSlip {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "betSlipId")
     private Long betSlipId;
 
@@ -23,6 +23,11 @@ public class BetSlip {
 
     @Column(name = "odds")
     private double odds;
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private betStatus status;
 
     @ManyToOne
     @JoinColumn(name = "betID")  // Foreign key linking BetSlip to Bet

@@ -1,17 +1,20 @@
 package com.BettingApi.BETTING.SERVICES;
 import com.BettingApi.BETTING.DTOS.BetRequestDTO;
 import com.BettingApi.BETTING.DTOS.BetResponseDTO;
+import com.BettingApi.BETTING.DTOS.BetslipDTO;
 import com.BettingApi.BETTING.DTOS.UserDto;
-import com.BettingApi.BETTING.ENTITIES.Bet;
-import com.BettingApi.BETTING.ENTITIES.BetSlip;
-import com.BettingApi.BETTING.ENTITIES.MatchInfo;
-import com.BettingApi.BETTING.ENTITIES.Users;
+import com.BettingApi.BETTING.ENTITIES.*;
+import com.BettingApi.BETTING.EXCEPTIONS.InsufficientBalanceException;
+import com.BettingApi.BETTING.EXCEPTIONS.MarketNotFoundException;
+import com.BettingApi.BETTING.EXCEPTIONS.MatchNotFoundException;
+import com.BettingApi.BETTING.EXCEPTIONS.OddsNotFoundException;
 import com.BettingApi.BETTING.REPOSITORIES.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -34,6 +37,19 @@ public class placeBetService {
         // Fetch the user from the database
         Users user = userRepository.findById(Math.toIntExact(id))
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        double accountBalance = user.getAccountBalance(); // Get user's current balance
+        double totalStake = betRequestDTOs.stream().mapToDouble(BetRequestDTO::getStake).sum();
+
+        // Validate if the user has enough balance
+        if (totalStake > accountBalance) {
+            throw new InsufficientBalanceException("Insufficient balance. Your account balance is " + accountBalance + ", but you need at least " + totalStake + " to place this bet.");
+        }
+
+
+        // Deduct stake from user's balance
+        user.setAccountBalance(accountBalance - totalStake);
+        userRepository.save(user);
 
         // Map user entity to UserDTO
         UserDto userDTO = new UserDto();
@@ -69,8 +85,6 @@ public class placeBetService {
             BetSlip betSlip = new BetSlip();
             betSlip.setMatchInfo(matchInfo);
             betSlip.setMarket(market);
-
-
             betSlip.setOdds(odds);
 
             // Add the BetSlip to the list of BetSlips
@@ -87,6 +101,10 @@ public class placeBetService {
         // Save the Bet entity to the database
         betsRepository.save(bet);
 
+
+        // Convert BetSlip entities to BetslipDTO
+        List<BetslipDTO> betslipDTOs = betSlips.stream().map(this::convertToBetslipDTO).toList();
+
         // Create BetResponseDTO for the bet that was placed
         BetResponseDTO betResponseDTO = BetResponseDTO.builder()
                 .betID(bet.getBetID())
@@ -95,7 +113,7 @@ public class placeBetService {
                 .stake(bet.getStake())
                 .totalOdds(bet.getTotalOdds())
                 .possibleWin(bet.getPossibleWin())
-                .betSlips(bet.getBetSlips())
+                .betSlips(betslipDTOs)
                 .user(userDTO)
                 .build();
 
@@ -106,25 +124,37 @@ public class placeBetService {
         return betResponseList;
     }
 
+    // Convert BetSlip to BetslipDTO
+    private BetslipDTO convertToBetslipDTO(BetSlip betSlip) {
+        BetslipDTO dto = new BetslipDTO();
+        dto.setBetSlipId(betSlip.getBetSlipId());
+        dto.setMatchInfo(betSlip.getMatchInfo());
+        dto.setMarket(betSlip.getMarket());
+        dto.setOdds(betSlip.getOdds());
+        dto.setStatus(betStatus.PENDING_PAYOUTS);
+        return dto;
+    }
 
 
 
 
 
-    // Retrieve the market name from the database
+
     private String getMarketName(Long marketId) {
-        var market = marketsRepository.findById(marketId).orElseThrow(() -> new RuntimeException("Market not found"));
+        var market = marketsRepository.findById(marketId)
+                .orElseThrow(() -> new MarketNotFoundException("Market with ID " + marketId + " not found"));
         return market.getMarketName();
     }
 
-    // Retrieve odds based on the oddsId from the database
     private double getOdds(Long oddsId) {
-      var odds = oddRepository.findById(oddsId).orElseThrow(() -> new RuntimeException("Odds not found"));
+        var odds = oddRepository.findById(oddsId)
+                .orElseThrow(() -> new OddsNotFoundException("Odds with ID " + oddsId + " not found"));
         return odds.getOddsValue();
     }
+
     private MatchInfo getMatchInfo(Long matchId) {
-        // Retrieve match information from the database based on matchId
-        var game = gamesRepository.findById(matchId).orElseThrow(() -> new RuntimeException("Match not found"));
+        var game = gamesRepository.findById(matchId)
+                .orElseThrow(() -> new MatchNotFoundException("Match with ID " + matchId + " not found"));
 
         MatchInfo matchInfo = new MatchInfo();
         matchInfo.setMatchId(game.getMatchId());

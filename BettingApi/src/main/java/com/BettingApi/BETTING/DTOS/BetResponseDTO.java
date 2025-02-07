@@ -6,7 +6,6 @@ import com.BettingApi.BETTING.ENTITIES.BetSlip;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class BetResponseDTO {
     private Double totalOdds;
     private Long possibleWin;
     private UserDto user;
-    private List<BetSlip> betSlips;
+    private List<BetslipDTO> betSlips;
 
 
 

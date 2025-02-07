@@ -24,6 +24,10 @@ public class Users implements UserDetails {
 
     @Column(name = "password")
     private String password;
+    
+    @Column(name="accountBalance")
+    private double accountBalance = 0.0;
+    
 
 
 
