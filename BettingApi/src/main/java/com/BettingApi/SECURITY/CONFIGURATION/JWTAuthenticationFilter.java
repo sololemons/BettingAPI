@@ -47,7 +47,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
             //Checking Authetication Token and Creating authenication object
 
-            if (jwtService.IstokenValid(Jwt,userDetails)){
+            if (jwtService.IsTokenValid(Jwt,userDetails)){
                 UsernamePasswordAuthenticationToken authenticationToken= new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

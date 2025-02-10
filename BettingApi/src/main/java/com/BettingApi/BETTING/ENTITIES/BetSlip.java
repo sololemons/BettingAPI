@@ -21,6 +21,7 @@ public class BetSlip {
     private String market;
 
     @Column(name = "pick" ,nullable = false)
+    @JsonProperty("pick")
     private String pick;
 
     @Column(name = "odds")

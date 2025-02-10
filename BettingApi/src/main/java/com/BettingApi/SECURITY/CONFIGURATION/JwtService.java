@@ -4,6 +4,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +18,9 @@ import java.util.function.Function;
 // This Is The Class That Will Manipulate The JWT token To Extract The User Enmail
 @Service
 public class JwtService {
-    private static final String SECRET_KEYS = "YSPjgMzpzAgNP36qJUtHL5uSddYS6Wz53haoZpm3VFP7xXN2//xcrYG3bJATFkZNxtI6lxkOWjOhQFWxHkNESCl4p3FBC75c5gME61N/5QofvxGaO/jS7fOIMAupzdXO3r953gknrRq2/x+R010gSWMkVfaET15fAb5/ECWJA1iLSQs5yfPBg60HBEpmgYKeHHYlzTStMm8BRuqcMwXYOpExQFo+G2lLgWLkvQ2aVycuKaMxn7FcRdYaNkOJ+qb956c4Z6JiwZAIP1XFOvtk9INNilciaArNHCG/ZJ5B8KAprEHVapIllWTBaO7wbEvgeHdPUyW5wS89H2wKLWOwANd75e6n5mVsQILawvD9Igs=\n";
+    @Value("${jwt.secret}")
+    private String SECRET_KEYS;
+
     // This Will Return The Username Which has Been Extracted From The JWT token
     public String extractUserName(String token) {
         return extractClaim(token,Claims::getSubject);
@@ -65,11 +69,15 @@ public class JwtService {
         return generateToken(new HashMap<>(),userDetails);
     }
     //validate Token
-    public boolean IstokenValid(String token,UserDetails userDetails){
-
-        final String username = extractUserName(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    public boolean IsTokenValid(String token, UserDetails userDetails) {
+        try {
+            final String username = extractUserName(token);
+            return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        } catch (Exception e) {
+            return false; // Token is invalid if any exception occurs
+        }
     }
+
 
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());

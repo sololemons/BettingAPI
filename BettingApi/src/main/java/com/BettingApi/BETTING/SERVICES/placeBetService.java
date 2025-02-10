@@ -32,14 +32,17 @@ public class placeBetService {
 
 
 
-@Transactional
     public List<BetResponseDTO> placeBets(List<BetRequestDTO> betRequestDTOs, Long id) {
         // Fetch the user from the database
         Users user = userRepository.findById(Math.toIntExact(id))
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         double accountBalance = user.getAccountBalance(); // Get user's current balance
-        double totalStake = betRequestDTOs.stream().mapToDouble(BetRequestDTO::getStake).sum();
+        double totalStake = betRequestDTOs.
+
+                stream().
+                mapToDouble(BetRequestDTO::getStake).
+                sum();
 
         // Validate if the user has enough balance
         if (totalStake > accountBalance) {
@@ -77,6 +80,7 @@ public class placeBetService {
             String market = getMarketName(betRequestDTO.getMarketId());
             double oddsValue = getOdds(betRequestDTO.getOddsId());
             String oddType = getOddsType(betRequestDTO.getOddsId());
+            System.out.println("Assigned oddType: " + oddType);
 
             // Create a new BetSlip and set the necessary values
             BetSlip betSlip = new BetSlip();
@@ -102,7 +106,11 @@ public class placeBetService {
 
 
         // Convert BetSlip entities to BetslipDTO
-        List<BetslipDTO> betslipDTOs = betSlips.stream().map(this::convertToBetslipDTO).toList();
+        List<BetslipDTO> betslipDTOs = betSlips.
+
+                stream().
+                map(this::convertToBetslipDTO).
+                toList();
 
         // Create BetResponseDTO for the bet that was placed
         BetResponseDTO betResponseDTO = BetResponseDTO.builder()

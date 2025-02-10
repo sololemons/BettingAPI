@@ -21,6 +21,7 @@ public class placeBetController {
     @ResponseStatus(HttpStatus.CREATED)
     public List<BetResponseDTO> placeBets(@RequestBody List<BetRequestDTO> betRequestDTOs, @RequestParam Long id) {
         return service.placeBets(betRequestDTOs, id);
+
     }
 
 

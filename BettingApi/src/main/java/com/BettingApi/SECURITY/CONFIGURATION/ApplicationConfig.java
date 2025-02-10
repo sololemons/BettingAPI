@@ -22,6 +22,7 @@ public class ApplicationConfig {
     public UserDetailsService userDetailsService(){
         return username -> repository.findByPhoneNumber(username)
                 .orElseThrow(() ->new UsernameNotFoundException("User not Found"));
+        
     }
     @Bean
     public AuthenticationProvider authenticationProvider(){

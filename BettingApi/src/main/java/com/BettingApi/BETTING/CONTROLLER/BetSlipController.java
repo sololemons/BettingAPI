@@ -18,21 +18,24 @@ public class BetSlipController {
         this.betSlipService = betSlipService;
     }
 
-    @GetMapping("/user/{id}")
-    public ResponseEntity<?> getBetSlipsByUser(@PathVariable Long id) {
-        try {
-            UserBetslipResponseDTO response = betSlipService.getBetSlipsByUserId(id);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
 
-    }
+// Get Betslips by UserId
+
+@GetMapping("/user/{id}")
+public ResponseEntity<UserBetslipResponseDTO> getBetSlipsByUser(@PathVariable Long id) {
+    return ResponseEntity.ok(betSlipService.getBetSlipsByUserId(id));
+}
+
+    //Get  betslips by BetID
+
     @GetMapping("/bet/{betId}")
     public ResponseEntity<List<BetslipDTO>> getBetSlipsByBetId(@PathVariable Long betId) {
         List<BetslipDTO> betSlips = betSlipService.getBetSlipsByBetId(betId);
         return ResponseEntity.ok(betSlips);
     }
+
+    //Get Betslips by userId and Bet Id
+
     @GetMapping("/user/{id}/bet/{betId}")
     public ResponseEntity<List<BetslipDTO>> getBetSlipsByUserAndBetId(
             @PathVariable Long id, @PathVariable Long betId) {

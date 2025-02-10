@@ -16,6 +16,7 @@ public class AuthenticationController {
     private final AuthenticationService service;
 
     public AuthenticationController(AuthenticationService service) {
+
         this.service = service;
     }
 
