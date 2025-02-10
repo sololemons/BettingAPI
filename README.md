@@ -1,18 +1,21 @@
-Here’s the corrected version of your `README.md` with proper syntax and formatting. You can copy and paste this directly into your `README.md` file:
+Here is a modern and well-structured **README** file for your **Betting API**, following best practices.  
 
-```markdown
-# 🎰 Betting API
+---
 
-## 📌 Overview  
-The **Betting API** is a RESTful web service built with **Spring Boot** that allows users to place bets, manage their accounts, and authenticate using JWT tokens.  
+# 🎰 Betting API  
+
+### A secure and scalable RESTful API for online betting, built with **Spring Boot** and **JWT authentication**.  
 
 ---
 
 ## 🚀 Features  
-✅ **User Authentication** – Secure registration & login using JWT  
-✅ **Bet Placement** – Users can place and view their bets.  
-✅ **API Documentation** – Integrated with Swagger UI  
-✅ **Error Handling** – Proper HTTP status codes, messages, and exceptions to efficiently handle errors.  
+
+✔ **User Authentication** – Secure login and registration using **JWT**  
+✔ **Bet Placement** – Users can place and track their bets  
+✔ **Betting History** – Retrieve all bets placed by a user  
+✔ **API Documentation** – Integrated with **Swagger UI**  
+✔ **Secure Access** – Role-based authentication using **Spring Security**  
+✔ **Error Handling** – Consistent HTTP responses with proper error messages  
 
 ---
 
@@ -20,7 +23,7 @@ The **Betting API** is a RESTful web service built with **Spring Boot** that all
 
 - **Backend**: Spring Boot, Spring Security, JWT Authentication  
 - **Database**: MySQL  
-- **Security**: JWT Authentication & Password Hashing  
+- **Security**: Password Hashing (BCrypt) & JWT  
 - **Build Tool**: Maven  
 - **API Documentation**: Swagger  
 
@@ -34,75 +37,68 @@ git clone https://github.com/your-username/betting-api.git
 cd betting-api
 ```
 
-### 2️⃣ Navigate to IntelliJ IDEA  
-1. Open IntelliJ IDEA.  
-2. Select **Open** and navigate to the `betting-api` directory.  
-3. IntelliJ will automatically detect the Maven project and load the dependencies.  
+### 2️⃣ Open in IntelliJ IDEA  
+1. Open **IntelliJ IDEA**  
+2. Select **"Open Existing Project"**  
+3. Choose the cloned repository folder  
 
-### 3️⃣ Configure the Database  
-1. Ensure MySQL is installed and running on your machine.  
-2. Create a new database named `betting_db` (or any name you prefer).  
-3. Update the `application.properties` file in the `src/main/resources` directory with your database credentials:  
-   ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/betting_db
-   spring.datasource.username=your-username
-   spring.datasource.password=your-password
-   spring.jpa.hibernate.ddl-auto=update
-   ```
+### 3️⃣ Set Up the Database  
+Ensure **MySQL** is running and create a new database:  
 
-### 4️⃣ Run the Application  
-1. Navigate to the `BettingApiApplication.java` file in the `src/main/java/com/example/bettingapi` directory.  
-2. Right-click and select **Run** to start the Spring Boot application.  
+```sql
+CREATE DATABASE betting;
 
-### 5️⃣ Access the API  
-- The API will be running at `http://localhost:8080`.  
-- Access the Swagger UI documentation at `http://localhost:8080/swagger-ui.html`.  
+```
+Then Import the Databse in My Main Folder
+Then, update your database credentials in `src/main/resources/application.properties`:  
 
----
-
-## 📚 API Endpoints  
-
-### Authentication  
-- **POST** `/api/auth/register` – Register a new user.  
-- **POST** `/api/auth/login` – Authenticate and receive a JWT token.  
-
-### Bets  
-- **POST** `/placebet/add/bet/?id={userId}` – Place a new bet.  
-- **POST** `/betslip/user/{userId}/bet/{betId}` – Retrieve betslips by the user and the bet ID.  
-
-> **Note**: For a complete list of endpoints, refer to the Swagger UI documentation.  
-
----
-
-## 🔒 Security  
-- JWT tokens are used for authentication.  
-- Passwords are securely hashed using BCrypt.  
-
----
-
-## 🛑 Error Handling  
-The API returns appropriate HTTP status codes and error messages for various scenarios, such as:  
-- `400 Bad Request` – Invalid input data.  
-- `401 Unauthorized` – Missing or invalid JWT token.  
-- `404 Not Found` – Resource not found.  
-- `500 Internal Server Error` – Server-side issues.  
-
----
-
-## 📄 License  
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.  
-
----
-
-## 🙏 Acknowledgments  
-- Built with ❤️ using **Spring Boot**.  
-- Special thanks to the **Spring Security** and **JWT** libraries for making authentication seamless.  
-
----
-
-Feel free to contribute, report issues, or suggest improvements! 🚀  
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/betting_db
+spring.datasource.username=root
+spring.datasource.password=your_password
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
 ```
 
+### 4️⃣ Build and Run the Application  
+Run the following commands:  
+
+```sh
+mvn clean install
+mvn spring-boot:run
+```
+
+OR  
+
+Run the `BettingApiApplication` class inside IntelliJ IDEA.  
+
+---
+
+## 📖 API Documentation  
+
+After starting the application, the **Swagger UI** documentation will be available at:  
+
+🔗 [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)  
+
+---
 
 
-😊
+
+
+
+## 🛡️ Security  
+
+- Passwords are securely **hashed** using **BCrypt**.  
+- **JWT Tokens** are used for authentication.  
+  
+
+---
+
+
+
+
+
+🔥 **Now you’re ready to start betting!** 🚀🎰  
+
+---
+
