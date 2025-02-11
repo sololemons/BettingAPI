@@ -20,9 +20,9 @@ public class betService {
     private final userRepository userRepository;
     private final betRepository betRepository;
 
-    public List<BetDto> getBetsByUserId(Long userId) {
+    public List<BetDto> getBetsByUserId(Long id) {
         // Fetch user by ID
-        Users user = userRepository.findById(Math.toIntExact(userId))
+        Users user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // Get user's bets

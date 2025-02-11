@@ -15,7 +15,7 @@ import java.util.List;
 public class Bet {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "betID")
     private Long betID;
 

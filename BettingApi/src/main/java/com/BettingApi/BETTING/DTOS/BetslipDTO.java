@@ -2,7 +2,6 @@ package com.BettingApi.BETTING.DTOS;
 
 import com.BettingApi.BETTING.ENTITIES.MatchInfo;
 import com.BettingApi.BETTING.ENTITIES.betStatus;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 @Data

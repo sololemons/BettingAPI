@@ -10,7 +10,7 @@ import lombok.Data;
 public class BetSlip {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "betSlipId")
     private Long betSlipId;
 

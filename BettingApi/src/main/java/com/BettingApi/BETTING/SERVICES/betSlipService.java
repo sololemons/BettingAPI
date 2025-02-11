@@ -28,44 +28,30 @@ public class betSlipService {
 
     public UserBetslipResponseDTO getBetSlipsByUserId(Long id) {
         // Fetch user by ID
-        Users user = userRepository.findById(Math.toIntExact(id))
+        Users user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // Get the user's bet slips
         List<BetSlip> betSlips = betSlipRepository.findByBet_Users(user);
 
-        // Convert BetSlip entities to DTOs
-        List<BetslipDTO> betslipDTOList = betSlips.stream().map(this::convertToDto).collect(Collectors.toList());
+        // Convert BetSlip and Users  entities to DTOs
+        List<BetslipDTO> betslipDTOList = betSlips.
+
+                stream().
+                map(this::convertToDto).
+                collect(Collectors.toList());
+
+        UserDto users = convertToUserDto(user);
 
         // Create response DTO
         UserBetslipResponseDTO response = new UserBetslipResponseDTO();
-        response.setUser(convertToUserDto(user));
+        response.setUser(users);
         response.setBetSlips(betslipDTOList);
 
         return response;
     }
 
-    //Method To Convert Betslip to DTO
 
-    private BetslipDTO convertToDto(BetSlip betSlip) {
-        BetslipDTO betslipDTO = new BetslipDTO();
-        betslipDTO.setBetSlipId(betSlip.getBetSlipId());
-        betslipDTO.setMatchInfo(betSlip.getMatchInfo());
-        betslipDTO.setMarket(betSlip.getMarket());
-        betslipDTO.setPick(betSlip.getPick());
-        betslipDTO.setOdds(betSlip.getOdds());
-        betslipDTO.setStatus(betSlip.getStatus());
-
-
-        return betslipDTO;
-    }
-//Method to Convert User Entity to DTO
-    private UserDto convertToUserDto(Users user) {
-        UserDto userDto = new UserDto();
-        userDto.setId((long) user.getId());
-        userDto.setPhoneNumber(user.getPhoneNumber());
-        return userDto;
-    }
 
 
     public List<BetslipDTO> getBetSlipsByBetId(Long betId) {
@@ -82,7 +68,7 @@ public class betSlipService {
 
     public List<BetslipDTO> getBetSlipsByUserAndBetId(Long id, Long betId) {
         // Fetch the user
-        Users user = userRepository.findById(Math.toIntExact(id))
+        Users user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // Fetch the bet
@@ -99,6 +85,27 @@ public class betSlipService {
 
         // Convert to DTO
         return betSlips.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
+    //Method To Convert BetSlip to DTO
+
+    private BetslipDTO convertToDto(BetSlip betSlip) {
+        BetslipDTO betslipDTO = new BetslipDTO();
+        betslipDTO.setBetSlipId(betSlip.getBetSlipId());
+        betslipDTO.setMatchInfo(betSlip.getMatchInfo());
+        betslipDTO.setMarket(betSlip.getMarket());
+        betslipDTO.setPick(betSlip.getPick());
+        betslipDTO.setOdds(betSlip.getOdds());
+        betslipDTO.setStatus(betSlip.getStatus());
+
+
+        return betslipDTO;
+    }
+    //Method to Convert User Entity to DTO
+    private UserDto convertToUserDto(Users user) {
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setPhoneNumber(user.getPhoneNumber());
+        return userDto;
     }
 
 }

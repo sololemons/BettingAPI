@@ -11,7 +11,7 @@ import java.util.List;
 public class Games {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "matchId")
     private Long matchId;
 

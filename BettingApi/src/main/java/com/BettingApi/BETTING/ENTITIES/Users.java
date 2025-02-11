@@ -15,9 +15,9 @@ import java.util.List;
 @Builder
 public class Users implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private int id;
+    private Long id;
 
     @Column(name = "phoneNumber" , unique = true)
     private String phoneNumber;

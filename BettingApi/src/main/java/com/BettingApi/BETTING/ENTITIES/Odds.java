@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 public class Odds {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "oddsId")
     private Long oddsId;
 

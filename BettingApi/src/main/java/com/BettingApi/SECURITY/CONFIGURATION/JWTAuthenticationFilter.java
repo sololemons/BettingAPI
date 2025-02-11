@@ -22,6 +22,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+
+
+
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -45,7 +48,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         if (userPhoneNumber != null && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails userDetails =this.userDetailsService.loadUserByUsername(userPhoneNumber);
 
-            //Checking Authetication Token and Creating authenication object
+            //Checking Authentication Token and Creating Authentication object
 
             if (jwtService.IsTokenValid(Jwt,userDetails)){
                 UsernamePasswordAuthenticationToken authenticationToken= new UsernamePasswordAuthenticationToken(

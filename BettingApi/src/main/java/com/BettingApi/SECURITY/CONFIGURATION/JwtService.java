@@ -18,6 +18,8 @@ import java.util.function.Function;
 // This Is The Class That Will Manipulate The JWT token To Extract The User Enmail
 @Service
 public class JwtService {
+
+
     @Value("${jwt.secret}")
     private String SECRET_KEYS;
 
@@ -74,7 +76,7 @@ public class JwtService {
             final String username = extractUserName(token);
             return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
         } catch (Exception e) {
-            return false; // Token is invalid if any exception occurs
+            return false;
         }
     }
 

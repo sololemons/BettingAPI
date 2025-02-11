@@ -3,6 +3,7 @@ import com.BettingApi.SECURITY.AUTHENTICATION.ENTITIES.AuthenticationRequest;
 import com.BettingApi.SECURITY.AUTHENTICATION.ENTITIES.AuthenticationResponse;
 import com.BettingApi.SECURITY.AUTHENTICATION.ENTITIES.RegisterRequest;
 import com.BettingApi.SECURITY.AUTHENTICATION.SERVICES.AuthenticationService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,14 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthenticationController {
 
     private final AuthenticationService service;
 
-    public AuthenticationController(AuthenticationService service) {
 
-        this.service = service;
-    }
 
 
     //Register an User

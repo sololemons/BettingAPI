@@ -9,24 +9,23 @@ import com.BettingApi.BETTING.EXCEPTIONS.MarketNotFoundException;
 import com.BettingApi.BETTING.EXCEPTIONS.MatchNotFoundException;
 import com.BettingApi.BETTING.EXCEPTIONS.OddsNotFoundException;
 import com.BettingApi.BETTING.REPOSITORIES.*;
-import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class placeBetService {
 
 
 
-    private betRepository betsRepository;
-    private userRepository  userRepository;
-    private oddsRepository oddRepository;
-    private marketRepository marketsRepository;
-    private gamesRepository gamesRepository;
+    private  final betRepository betsRepository;
+    private  final userRepository  userRepository;
+    private  final oddsRepository oddRepository;
+    private  final marketRepository marketsRepository;
+    private  final gamesRepository gamesRepository;
 
 
 
@@ -34,10 +33,10 @@ public class placeBetService {
 
     public List<BetResponseDTO> placeBets(List<BetRequestDTO> betRequestDTOs, Long id) {
         // Fetch the user from the database
-        Users user = userRepository.findById(Math.toIntExact(id))
+        Users user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        double accountBalance = user.getAccountBalance(); // Get user's current balance
+        double accountBalance = user.getAccountBalance();
         double totalStake = betRequestDTOs.
 
                 stream().
@@ -54,10 +53,14 @@ public class placeBetService {
         user.setAccountBalance(accountBalance - totalStake);
         userRepository.save(user);
 
+
+
         // Map user entity to UserDTO
         UserDto userDTO = new UserDto();
-        userDTO.setId((long) user.getId());
+        userDTO.setId(user.getId());
         userDTO.setPhoneNumber(user.getPhoneNumber());
+
+
 
         List<BetResponseDTO> betResponseList = new ArrayList<>();
 
@@ -65,7 +68,7 @@ public class placeBetService {
         Bet bet = new Bet();
         bet.setBetPlacedOn(java.time.LocalDateTime.now().toString());
         bet.setTotalGames(betRequestDTOs.size());
-        bet.setStake(betRequestDTOs.stream().mapToDouble(BetRequestDTO::getStake).sum());
+        bet.setStake(totalStake);
         bet.setTotalOdds(0.0);
         bet.setPossibleWin(0L);
         bet.setUsers(user);
@@ -93,9 +96,11 @@ public class placeBetService {
             // Add the BetSlip to the list of BetSlips
             betSlips.add(betSlip);
 
+            double possibleWin = betRequestDTO.getStake()* oddsValue;
+
             // Update total odds and possible win
-            bet.setTotalOdds(bet.getTotalOdds() + oddsValue); // You can adjust the logic here for total odds calculation
-            bet.setPossibleWin(bet.getPossibleWin() + (long) (betRequestDTO.getStake() * oddsValue)); // Update possible win
+            bet.setTotalOdds(bet.getTotalOdds() + oddsValue);
+            bet.setPossibleWin((long) (bet.getPossibleWin() + possibleWin));
         }
 
         // Set the betSlips list to the Bet entity
@@ -105,8 +110,8 @@ public class placeBetService {
         betsRepository.save(bet);
 
 
-        // Convert BetSlip entities to BetslipDTO
-        List<BetslipDTO> betslipDTOs = betSlips.
+        // Convert BetSlip entities to BetSlipDTO
+        List<BetslipDTO> betSlipDTOs = betSlips.
 
                 stream().
                 map(this::convertToBetslipDTO).
@@ -120,7 +125,7 @@ public class placeBetService {
                 .stake(bet.getStake())
                 .totalOdds(bet.getTotalOdds())
                 .possibleWin(bet.getPossibleWin())
-                .betSlips(betslipDTOs)
+                .betSlips(betSlipDTOs)
                 .user(userDTO)
                 .build();
 
@@ -131,16 +136,19 @@ public class placeBetService {
         return betResponseList;
     }
 
-    // Convert BetSlip to BetslipDTO
+    // Convert BetSlip to BetSlipDTO
     private BetslipDTO convertToBetslipDTO(BetSlip betSlip) {
         BetslipDTO dto = new BetslipDTO();
         dto.setBetSlipId(betSlip.getBetSlipId());
         dto.setMatchInfo(betSlip.getMatchInfo());
         dto.setMarket(betSlip.getMarket());
         dto.setOdds(betSlip.getOdds());
+        dto.setPick(betSlip.getPick());
         dto.setStatus(betStatus.PENDING_PAYOUTS);
         return dto;
     }
+
+
 
 private String getOddsType(Long oddsId){
 
