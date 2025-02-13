@@ -4,11 +4,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,13 +17,15 @@ import java.util.function.Function;
 public class JwtService {
 
 
-    @Value("${jwt.secret}")
-    private String SECRET_KEYS;
+    private static final String SECRET_KEYS ="ABuws1vd27AOMnfVHH1FXdsFC/fVkemCJ/pHNGha7Fs=";
 
     // This Will Return The Username Which has Been Extracted From The JWT token
     public String extractUserName(String token) {
         return extractClaim(token,Claims::getSubject);
     }
+
+
+
 
     //Extract A single Claim That We May Pass in the payload
     public <T> T extractClaim(String token, Function<Claims,T > claimResolver){
@@ -65,6 +64,8 @@ public class JwtService {
                 .compact();
 
     }
+
+
 
     // A simplified way of Generating a Token Where You Dont Need Additional Claims In The Payload
     public String generateToken(UserDetails userDetails){

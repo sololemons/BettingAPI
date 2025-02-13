@@ -1,13 +1,7 @@
 package com.BettingApi.BETTING.SERVICES;
-import com.BettingApi.BETTING.DTOS.BetRequestDTO;
-import com.BettingApi.BETTING.DTOS.BetResponseDTO;
-import com.BettingApi.BETTING.DTOS.BetslipDTO;
-import com.BettingApi.BETTING.DTOS.UserDto;
+import com.BettingApi.BETTING.DTOS.*;
 import com.BettingApi.BETTING.ENTITIES.*;
-import com.BettingApi.BETTING.EXCEPTIONS.InsufficientBalanceException;
-import com.BettingApi.BETTING.EXCEPTIONS.MarketNotFoundException;
-import com.BettingApi.BETTING.EXCEPTIONS.MatchNotFoundException;
-import com.BettingApi.BETTING.EXCEPTIONS.OddsNotFoundException;
+import com.BettingApi.BETTING.EXCEPTIONS.*;
 import com.BettingApi.BETTING.REPOSITORIES.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,17 +25,18 @@ public class placeBetService {
 
 
 
-    public List<BetResponseDTO> placeBets(List<BetRequestDTO> betRequestDTOs, Long id) {
+    public List<BetResponseDTO> placeBets(PlaceBetRequestDTO placeBetRequestDTOS, String phoneNumber) {
         // Fetch the user from the database
-        Users user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Users user = userRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+
 
         double accountBalance = user.getAccountBalance();
-        double totalStake = betRequestDTOs.
+        double totalStake = placeBetRequestDTOS.getStake();
+        int totalGames= placeBetRequestDTOS.getBets().size();
 
-                stream().
-                mapToDouble(BetRequestDTO::getStake).
-                sum();
+
 
         // Validate if the user has enough balance
         if (totalStake > accountBalance) {
@@ -67,7 +62,8 @@ public class placeBetService {
         // Create a new Bet object that will hold all BetSlips
         Bet bet = new Bet();
         bet.setBetPlacedOn(java.time.LocalDateTime.now().toString());
-        bet.setTotalGames(betRequestDTOs.size());
+        bet.setTotalGames(totalGames);
+
         bet.setStake(totalStake);
         bet.setTotalOdds(0.0);
         bet.setPossibleWin(0L);
@@ -77,7 +73,7 @@ public class placeBetService {
         List<BetSlip> betSlips = new ArrayList<>();
 
         // Iterate over each BetRequestDTO in the list
-        for (BetRequestDTO betRequestDTO : betRequestDTOs) {
+        for (BetRequestDTO betRequestDTO : placeBetRequestDTOS.getBets()) {
             // Fetch match, market, and odds based on the bet request
             MatchInfo matchInfo = getMatchInfo(betRequestDTO.getMatchId());
             String market = getMarketName(betRequestDTO.getMarketId());
@@ -96,7 +92,7 @@ public class placeBetService {
             // Add the BetSlip to the list of BetSlips
             betSlips.add(betSlip);
 
-            double possibleWin = betRequestDTO.getStake()* oddsValue;
+            double possibleWin = totalStake * oddsValue;
 
             // Update total odds and possible win
             bet.setTotalOdds(bet.getTotalOdds() + oddsValue);

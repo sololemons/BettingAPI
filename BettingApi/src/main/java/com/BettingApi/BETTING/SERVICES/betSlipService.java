@@ -8,6 +8,7 @@ import com.BettingApi.BETTING.ENTITIES.Bet;
 import com.BettingApi.BETTING.ENTITIES.BetSlip;
 import com.BettingApi.BETTING.ENTITIES.Users;
 
+import com.BettingApi.BETTING.EXCEPTIONS.UserNotFoundException;
 import com.BettingApi.BETTING.REPOSITORIES.betRepository;
 import com.BettingApi.BETTING.REPOSITORIES.betSlipRepository;
 import com.BettingApi.BETTING.REPOSITORIES.userRepository;
@@ -29,7 +30,7 @@ public class betSlipService {
     public UserBetslipResponseDTO getBetSlipsByUserId(Long id) {
         // Fetch user by ID
         Users user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         // Get the user's bet slips
         List<BetSlip> betSlips = betSlipRepository.findByBet_Users(user);
@@ -57,13 +58,16 @@ public class betSlipService {
     public List<BetslipDTO> getBetSlipsByBetId(Long betId) {
         // Fetch the bet by ID
         Bet bet = betRepository.findById(betId)
-                .orElseThrow(() -> new RuntimeException("Bet not found"));
+                .orElseThrow(() -> new UserNotFoundException("Bet not found"));
 
         // Get bet slips associated with the bet
         List<BetSlip> betSlips = betSlipRepository.findByBet(bet);
 
         // Convert to DTO
-        return betSlips.stream().map(this::convertToDto).collect(Collectors.toList());
+        return betSlips.
+                stream().
+                map(this::convertToDto).
+                collect(Collectors.toList());
     }
 
     public List<BetslipDTO> getBetSlipsByUserAndBetId(Long id, Long betId) {
@@ -77,7 +81,7 @@ public class betSlipService {
 
         // Ensure the bet belongs to the user
         if (!bet.getUsers().equals(user)) {
-            throw new RuntimeException("Bet does not belong to the user");
+            throw new UserNotFoundException("Bet does not belong to the user");
         }
 
         // Get bet slips associated with the bet

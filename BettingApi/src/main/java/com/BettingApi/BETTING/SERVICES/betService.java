@@ -5,6 +5,7 @@ import com.BettingApi.BETTING.DTOS.UserBetslipResponseDTO;
 import com.BettingApi.BETTING.DTOS.UserDto;
 import com.BettingApi.BETTING.ENTITIES.Bet;
 import com.BettingApi.BETTING.ENTITIES.Users;
+import com.BettingApi.BETTING.EXCEPTIONS.UserNotFoundException;
 import com.BettingApi.BETTING.REPOSITORIES.betRepository;
 import com.BettingApi.BETTING.REPOSITORIES.userRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class betService {
     public List<BetDto> getBetsByUserId(Long id) {
         // Fetch user by ID
         Users user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         // Get user's bets
         List<Bet> bets = betRepository.findByUsers(user);

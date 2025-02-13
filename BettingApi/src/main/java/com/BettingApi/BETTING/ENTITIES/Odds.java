@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @Table(name = "odds")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Odds {
 
     @Id
@@ -25,12 +27,5 @@ public class Odds {
     @JoinColumn(name = "marketId")
     private Markets market;
 
-    public Odds(String oddType) {
-        this.oddType = oddType;
-    }
 
-
-    public Odds() {
-
-    }
 }
