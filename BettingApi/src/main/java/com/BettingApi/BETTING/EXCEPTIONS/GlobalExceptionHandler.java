@@ -2,7 +2,6 @@ package com.BettingApi.BETTING.EXCEPTIONS;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -19,12 +18,25 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, "Bad Request", ex.getMessage());
     }
 
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<Map<String, Object>> handleUnauthorizedExceptions(UnauthorizedException ex) {
+        return buildErrorResponse(HttpStatus.UNAUTHORIZED, "Unauthorized", ex.getMessage());
+    }
+
+
+
 
     // 🔹 Handle Unauthorized Exceptions
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleUnauthorizedExceptions(UserNotFoundException ex) {
+    public ResponseEntity<Map<String, Object>> handleNotFoundExceptions(UserNotFoundException ex) {
         return buildErrorResponse(HttpStatus.NOT_FOUND, "NOT FOUND", ex.getMessage());
     }
+
+    @ExceptionHandler(MissMatchOddsException.class)
+    public ResponseEntity<Map<String, Object>> handleUnprocessedExceptions(MissMatchOddsException ex) {
+        return buildErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, "UNPROCESSABLE ENTITY", ex.getMessage());
+    }
+
 
 
 

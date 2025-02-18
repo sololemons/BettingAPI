@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "odds")
 @Data
@@ -26,6 +28,9 @@ public class Odds {
    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "marketId")
     private Markets market;
+
+
+
 
 
 }

@@ -1,8 +1,5 @@
 package com.BettingApi.BETTING.SERVICES;
-
 import com.BettingApi.BETTING.DTOS.BetDto;
-import com.BettingApi.BETTING.DTOS.UserBetslipResponseDTO;
-import com.BettingApi.BETTING.DTOS.UserDto;
 import com.BettingApi.BETTING.ENTITIES.Bet;
 import com.BettingApi.BETTING.ENTITIES.Users;
 import com.BettingApi.BETTING.EXCEPTIONS.UserNotFoundException;
@@ -21,19 +18,23 @@ public class betService {
     private final userRepository userRepository;
     private final betRepository betRepository;
 
-    public List<BetDto> getBetsByUserId(Long id) {
-        // Fetch user by ID
-        Users user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        // Get user's bets
+    public List<BetDto> getBetsByPhoneNumber(String phoneNumber) {
+
+        Users user = userRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new UserNotFoundException("User not found with phone number: " + phoneNumber));
+
+
         List<Bet> bets = betRepository.findByUsers(user);
 
-        // Convert bets to BetDto
+
         return bets.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
+
+    //Method to convert Bet Entity to BetDto
     private BetDto convertToDto(Bet bet) {
+
         BetDto betDto = new BetDto();
         betDto.setBetID(bet.getBetID());
         betDto.setBetPlacedOn(bet.getBetPlacedOn());
@@ -43,9 +44,6 @@ public class betService {
         betDto.setStatus(bet.getStatus());
         betDto.setPossibleWin(bet.getPossibleWin());
 
-
         return betDto;
     }
-
-
 }

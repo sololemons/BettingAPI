@@ -28,12 +28,13 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
 
         // Validate phone number before authentication
-        String formattedPhoneNumber = validateAndFormatPhoneNumber(request.getPhoneNumber());
+        String formattedPhoneNumber = validateAndFormatPhoneNumber(request.getPhoneNumber().trim());
+        String Password = request.getPassword().trim();
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         formattedPhoneNumber,
-                        request.getPassword()
+                        Password
 
                 )
         );
@@ -66,7 +67,7 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
         repository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateRegistrationToken(user);
 
         return AuthenticationResponse.builder().
                 token(jwtToken)
@@ -75,7 +76,7 @@ public class AuthenticationService {
     }
     private String validateAndFormatPhoneNumber(String phoneNumber) {
         try {
-            Phonenumber.PhoneNumber number = phoneUtil.parse(phoneNumber, "KE"); // Default country: Kenya (KE)
+            Phonenumber.PhoneNumber number = phoneUtil.parse(phoneNumber, "KE");
             if (!phoneUtil.isValidNumber(number)) {
                 throw new MissingFieldException("Invalid phone number!");
             }
@@ -88,7 +89,7 @@ public class AuthenticationService {
             return phoneUtil.format(number, PhoneNumberUtil.PhoneNumberFormat.E164);
 
         } catch (NumberParseException e) {
-            throw new MissingFieldException("Invalid phone number format!");
+            throw new MissingFieldException("Invalid phone number format or it is null!");
         }
     }
 

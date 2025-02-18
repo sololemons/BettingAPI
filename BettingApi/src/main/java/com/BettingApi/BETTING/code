@@ -6,9 +6,7 @@ import com.BettingApi.BETTING.REPOSITORIES.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @Service
@@ -73,8 +71,6 @@ public class placeBetService {
 
 
         List<BetSlip> betSlips = new ArrayList<>();
-        // Set to keep track of match IDs to detect same match with different markets
-        Set<Long> matchesSet = new HashSet<>();
 
         // Iterate over each BetRequestDTO in the list
         for (BetRequestDTO betRequestDTO : placeBetRequestDTOS.getBets()) {
@@ -85,20 +81,6 @@ public class placeBetService {
             String oddType = getOddsType(betRequestDTO.getOddsId());
             System.out.println("Assigned oddType: " + oddType);
 
-
-            // Validate that the oddsValue in the request matches the one in the database
-            if (oddsValue != betRequestDTO.getOddsValue()) {
-                throw new MissMatchOddsException("The odds have changed since you viewed them. Please refresh your page.");
-            }
-
-
-            if (matchesSet.contains(betRequestDTO.getMatchId())) {
-                throw new MissingFieldException("You cannot place bets for multiple markets (like '1x2' and 'Double Chance') on the same match in a single bet.");
-            }
-            // Add the match to the set to track it
-            matchesSet.add(betRequestDTO.getMatchId());
-
-           
             // Create a new BetSlip and set the necessary values
             BetSlip betSlip = new BetSlip();
             betSlip.setMatchInfo(matchInfo);
@@ -164,8 +146,6 @@ public class placeBetService {
 
 
 
-
-
 private String getOddsType(Long oddsId){
 
     var odds = oddRepository.findById(oddsId)
@@ -187,9 +167,21 @@ private String getOddsType(Long oddsId){
                 .orElseThrow(() -> new OddsNotFoundException("Odds with ID " + oddsId + " not found"));
 
 
+        // If odds were modified, mark bet as UNPROCESSED
+        if (odds.isModified()) {
+            throw new MissingFieldException("Odds have been modified. Please update your bet.");
+        }
+
         return odds.getOddsValue();
     }
+    public void updateOdds(Long oddsId, double newOddsValue) {
+        var odds = oddRepository.findById(oddsId)
+                .orElseThrow(() -> new OddsNotFoundException("Odds with ID " + oddsId + " not found"));
 
+        odds.setOddsValue(newOddsValue);
+        odds.setModified(true); // Mark as modified
+        oddRepository.save(odds);
+    }
 
     private MatchInfo getMatchInfo(Long matchId) {
         var game = gamesRepository.findById(matchId)

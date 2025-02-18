@@ -3,6 +3,7 @@ package com.BettingApi.BETTING.CONTROLLER;
 import com.BettingApi.BETTING.DTOS.BetslipDTO;
 import com.BettingApi.BETTING.DTOS.UserBetslipResponseDTO;
 import com.BettingApi.BETTING.SERVICES.betSlipService;
+import com.BettingApi.SECURITY.CONFIGURATION.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,34 +14,34 @@ import java.util.List;
 public class BetSlipController {
 
     private final betSlipService betSlipService;
+    private final JwtService jwtService;
 
-    public BetSlipController(betSlipService betSlipService) {
+    public BetSlipController(betSlipService betSlipService, JwtService jwtService) {
         this.betSlipService = betSlipService;
+        this.jwtService = jwtService;
     }
 
 
-// Get Betslips by UserId
+    @GetMapping("/user")
+    public ResponseEntity<UserBetslipResponseDTO> getBetSlipsByUser(
+            @RequestHeader("Authorization") String authHeader) {
 
-@GetMapping("/user/{id}")
-public ResponseEntity<UserBetslipResponseDTO> getBetSlipsByUser(@PathVariable Long id) {
-    return ResponseEntity.ok(betSlipService.getBetSlipsByUserId(id));
-}
+        String token = authHeader.substring(7);
+        String phoneNumber = jwtService.extractUserName(token);
 
-    //Get  betslips by BetID
-
-    @GetMapping("/bet/{betId}")
-    public ResponseEntity<List<BetslipDTO>> getBetSlipsByBetId(@PathVariable Long betId) {
-        List<BetslipDTO> betSlips = betSlipService.getBetSlipsByBetId(betId);
-        return ResponseEntity.ok(betSlips);
+        return ResponseEntity.ok(betSlipService.getBetSlipsByPhoneNumber(phoneNumber));
     }
 
-    //Get Betslips by userId and Bet Id
 
-    @GetMapping("/user/{id}/bet/{betId}")
+
+    @GetMapping("/user/bet/{betId}")
     public ResponseEntity<List<BetslipDTO>> getBetSlipsByUserAndBetId(
-            @PathVariable Long id, @PathVariable Long betId) {
-        List<BetslipDTO> betSlips = betSlipService.getBetSlipsByUserAndBetId(id, betId);
+            @RequestHeader("Authorization") String authHeader, @PathVariable Long betId) {
+
+        String token = authHeader.substring(7);
+        String phoneNumber = jwtService.extractUserName(token);
+
+        List<BetslipDTO> betSlips = betSlipService.getBetSlipsByPhoneNumberAndBetId(phoneNumber, betId);
         return ResponseEntity.ok(betSlips);
     }
-
 }

@@ -3,11 +3,14 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 @Data
 public class BetRequestDTO {
-    @NotNull(message = "matchId is Required")
+    @NotNull
     private Long matchId;
-    @NotNull(message = "marketId is Required")
+    @NotNull
     private Long marketId;
-    @NotNull(message = "oddsId is Required")
+    @NotNull
     private Long oddsId;
+    @NotNull
+    private Double oddsValue;
+
 
 }

@@ -28,8 +28,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/betslip/**").permitAll()
-                        .requestMatchers(("/bets/**")).permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
 
                         .anyRequest().authenticated() // All other requests require authentication
