@@ -43,7 +43,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
         jwt = authHeader.substring(7).trim(); // Trim extra spaces
 
-        // ✅ BLOCK REGISTRATION TOKENS
+
         if (jwtService.isRegistrationToken(jwt)) {
             throw new UnauthorizedException("Registration Tokens are not used for authentication");
 
