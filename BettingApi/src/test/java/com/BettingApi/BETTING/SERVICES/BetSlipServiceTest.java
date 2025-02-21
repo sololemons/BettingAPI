@@ -52,7 +52,7 @@ class BetSlipServiceTest {
 
         // Create a test bet
         testBet = new Bet();
-        testBet.setBetID(10L);
+        testBet.setBetId(10L);
         testBet.setUsers(testUser);
 
         // Create a test BetSlip
@@ -95,16 +95,16 @@ class BetSlipServiceTest {
     @Test
     void testGetBetSlipsByPhoneNumberAndBetId_Success() {
         when(userRepository.findByPhoneNumber(testUser.getPhoneNumber())).thenReturn(Optional.of(testUser));
-        when(betRepository.findById(testBet.getBetID())).thenReturn(Optional.of(testBet));
+        when(betRepository.findById(testBet.getBetId())).thenReturn(Optional.of(testBet));
         when(betSlipRepository.findByBet(testBet)).thenReturn(List.of(testBetSlip));
 
-        List<BetSlipDto> betSlipDtos = betSlipService.getBetSlipsByPhoneNumberAndBetId(testUser.getPhoneNumber(), testBet.getBetID());
+        List<BetSlipDto> betSlipDtos = betSlipService.getBetSlipsByPhoneNumberAndBetId(testUser.getPhoneNumber(), testBet.getBetId());
 
         assertThat(betSlipDtos).hasSize(1);
         assertThat(betSlipDtos.get(0).getPick()).isEqualTo("Home Team Wins");
 
         verify(userRepository, times(1)).findByPhoneNumber(testUser.getPhoneNumber());
-        verify(betRepository, times(1)).findById(testBet.getBetID());
+        verify(betRepository, times(1)).findById(testBet.getBetId());
         verify(betSlipRepository, times(1)).findByBet(testBet);
     }
 
@@ -124,14 +124,14 @@ class BetSlipServiceTest {
     // Bet Not Found Case
     @Test
     void testGetBetSlipsByPhoneNumberAndBetId_BetNotFound() {
-        when(userRepository.findByPhoneNumber("0710789012")).thenReturn(Optional.of(testUser));
+        when(userRepository.findByPhoneNumber(testUser.getPhoneNumber())).thenReturn(Optional.of(testUser));
         when(betRepository.findById(20L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> betSlipService.getBetSlipsByPhoneNumberAndBetId("0710789012", 20L))
+        assertThatThrownBy(() -> betSlipService.getBetSlipsByPhoneNumberAndBetId(testUser.getPhoneNumber(), 20L))
                 .isInstanceOf(UserNotFoundException.class)
                 .hasMessageContaining("Bet not found");
 
-        verify(userRepository, times(1)).findByPhoneNumber("0710789012");
+        verify(userRepository, times(1)).findByPhoneNumber(testUser.getPhoneNumber());
         verify(betRepository, times(1)).findById(20L);
         verifyNoInteractions(betSlipRepository);
     }

@@ -28,7 +28,7 @@ public class PlaceBetService {
 
     @Transactional
     public List<BetResponseDto> placeBets(PlaceBetRequestDto placeBetRequestDTOS, String phoneNumber) {
-        // Fetch the user from the database
+
         Users user = userRepository.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
@@ -146,7 +146,7 @@ public class PlaceBetService {
 
         // Create BetResponseDTO for the bet that was placed
         BetResponseDto betResponseDTO = BetResponseDto.builder()
-                .betID(savedBet.getBetID())
+                .betID(savedBet.getBetId())
                 .betPlacedOn(savedBet.getBetPlacedOn())
                 .totalGames(savedBet.getTotalGames())
                 .stake(savedBet.getStake())

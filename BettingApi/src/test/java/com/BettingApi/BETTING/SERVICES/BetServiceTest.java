@@ -44,7 +44,7 @@ public class BetServiceTest {
         testUser.setPhoneNumber("0706725681");
 
         testBet = new Bet();
-        testBet.setBetID(1L);
+        testBet.setBetId(1L);
         testBet.setUsers(testUser);
         testBet.setTotalGames(2);
         testBet.setStake(100D);

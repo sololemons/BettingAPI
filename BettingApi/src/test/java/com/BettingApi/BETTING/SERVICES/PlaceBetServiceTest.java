@@ -92,7 +92,7 @@ class PlaceBetServiceTest {
         markets.setOddsList(List.of(odds));
 
         bet = new Bet();
-        bet.setBetID(1L);
+        bet.setBetId(1L);
         bet.setUsers(user);
         bet.setTotalGames(1);
         bet.setStake(placeBetRequestDTO.getStake());

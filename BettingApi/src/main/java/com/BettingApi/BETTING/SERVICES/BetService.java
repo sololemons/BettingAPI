@@ -37,7 +37,7 @@ public class BetService {
     private BetDto convertToDto(Bet bet) {
 
         BetDto betDto = new BetDto();
-        betDto.setBetID(bet.getBetID());
+        betDto.setBetID(bet.getBetId());
         betDto.setBetPlacedOn(bet.getBetPlacedOn());
         betDto.setTotalGames(bet.getTotalGames());
         betDto.setStake(bet.getStake());

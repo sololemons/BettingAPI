@@ -11,6 +11,7 @@ import java.util.List;
 public class PlaceBetRequestDto {
     @NotNull
     private double stake;
+
     @NotNull
     private List<BetRequestDto> bets;
 }
