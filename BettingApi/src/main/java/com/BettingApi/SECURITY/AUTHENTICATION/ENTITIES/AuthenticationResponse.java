@@ -1,4 +1,5 @@
 package com.BettingApi.SECURITY.AUTHENTICATION.ENTITIES;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

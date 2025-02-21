@@ -1,8 +1,10 @@
 package com.BettingApi.BETTING.DTOS;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+
 @Data
-public class BetRequestDTO {
+public class BetRequestDto {
     @NotNull
     private Long matchId;
     @NotNull
@@ -10,7 +12,7 @@ public class BetRequestDTO {
     @NotNull
     private Long oddsId;
     @NotNull
-    private Double oddsValue;
+    private double oddsValue;
 
 
 }

@@ -24,17 +24,17 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // ✅ Checks if the token has a special "registration" claim
+    // Checks if the token has a special registration claim in the token
     public boolean isRegistrationToken(String token) {
         try {
             Claims claims = extractAllClaims(token);
-            return "registration".equals(claims.get("token_type")); // Ensures only registration tokens are flagged
+            return "registration".equals(claims.get("token_type"));
         } catch (Exception e) {
             return false;
         }
     }
 
-    // ✅ Ensures only valid **authentication** tokens are used
+    //Ensures only valid authentication tokens are used
     public boolean isValidAuthenticationToken(String token) {
         return token != null && !isRegistrationToken(token);
     }
@@ -45,7 +45,7 @@ public class JwtService {
         return claimResolver.apply(claims);
     }
 
-    // Extract all claims
+    // Extract all claims from a token
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSignInKey())
@@ -54,36 +54,35 @@ public class JwtService {
                 .getBody();
     }
 
-    // Get signing key
+
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // Generate **Authentication Token**
+    // Generate Authentication Token
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
-    // Generate **Registration Token**
+    // Generate Registration Token
     public String generateRegistrationToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("token_type", "registration"); // Ensure registration token has correct type
+        claims.put("token_type", "registration");
         return generateToken(claims, userDetails);
     }
 
-    // Generate token with claims
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 24-hour expiration
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // ✅ Ensure Token is valid for authentication
+
     public boolean isTokenValid(String token, UserDetails userDetails) {
         try {
             final String username = extractUserName(token);

@@ -1,7 +1,8 @@
 package com.BettingApi.SECURITY.AUTHENTICATION.SERVICES;
+
 import com.BettingApi.BETTING.ENTITIES.Users;
 import com.BettingApi.BETTING.EXCEPTIONS.MissingFieldException;
-import com.BettingApi.BETTING.REPOSITORIES.userRepository;
+import com.BettingApi.BETTING.REPOSITORIES.UserRepository;
 import com.BettingApi.SECURITY.AUTHENTICATION.ENTITIES.AuthenticationRequest;
 import com.BettingApi.SECURITY.AUTHENTICATION.ENTITIES.AuthenticationResponse;
 import com.BettingApi.SECURITY.AUTHENTICATION.ENTITIES.RegisterRequest;
@@ -23,8 +24,9 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final userRepository repository;
+    private final UserRepository repository;
     private final PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
 
         // Validate phone number before authentication
@@ -38,7 +40,7 @@ public class AuthenticationService {
 
                 )
         );
-        var user  = repository.findByPhoneNumber(formattedPhoneNumber)
+        var user = repository.findByPhoneNumber(formattedPhoneNumber)
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
 
@@ -47,7 +49,8 @@ public class AuthenticationService {
                 .build();
 
     }
-    public AuthenticationResponse register(RegisterRequest request){
+
+    public AuthenticationResponse register(RegisterRequest request) {
 
         // Validate phone number before Registering
         String formattedPhoneNumber = validateAndFormatPhoneNumber(request.getPhoneNumber());
@@ -74,13 +77,14 @@ public class AuthenticationService {
                 .build();
 
     }
+
     private String validateAndFormatPhoneNumber(String phoneNumber) {
         try {
             Phonenumber.PhoneNumber number = phoneUtil.parse(phoneNumber, "KE");
             if (!phoneUtil.isValidNumber(number)) {
                 throw new MissingFieldException("Invalid phone number!");
             }
-            // Enforce that the number belongs to Kenya (+254)
+            // Make sure that the number belongs to Kenya (+254)
             if (number.getCountryCode() != 254) {
                 throw new MissingFieldException("Only Kenyan phone numbers (+254) are allowed!");
             }

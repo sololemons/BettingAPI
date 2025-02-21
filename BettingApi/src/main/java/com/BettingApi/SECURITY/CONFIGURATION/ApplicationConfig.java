@@ -1,5 +1,6 @@
 package com.BettingApi.SECURITY.CONFIGURATION;
-import com.BettingApi.BETTING.REPOSITORIES.userRepository;
+
+import com.BettingApi.BETTING.REPOSITORIES.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,27 +17,29 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private final userRepository repository;
+    private final UserRepository repository;
 
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         return username -> repository.findByPhoneNumber(username)
-                .orElseThrow(() ->new UsernameNotFoundException("User not Found"));
-        
+                .orElseThrow(() -> new UsernameNotFoundException("User not Found"));
+
     }
+
     @Bean
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider authenticationProvider= new DaoAuthenticationProvider();
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
+
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception
-    {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
 
         return config.getAuthenticationManager();
     }
+
     @Bean
 
     public PasswordEncoder passwordEncoder() {

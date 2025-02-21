@@ -35,15 +35,15 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         final String jwt;
         final String userPhoneNumber;
 
-        // Continue without authentication if header is missing or invalid
+
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        jwt = authHeader.substring(7).trim(); // Trim extra spaces
+        jwt = authHeader.substring(7).trim();
 
-        // ✅ BLOCK REGISTRATION TOKENS
+
         if (jwtService.isRegistrationToken(jwt)) {
             throw new UnauthorizedException("Registration Tokens are not used for authentication");
 

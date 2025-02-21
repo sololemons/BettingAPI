@@ -1,15 +1,15 @@
 package com.BettingApi.BETTING.SERVICES;
 
-import com.BettingApi.BETTING.DTOS.BetslipDTO;
-import com.BettingApi.BETTING.DTOS.UserBetslipResponseDTO;
+import com.BettingApi.BETTING.DTOS.BetSlipDto;
+import com.BettingApi.BETTING.DTOS.UserBetslipResponseDto;
 import com.BettingApi.BETTING.DTOS.UserDto;
 import com.BettingApi.BETTING.ENTITIES.Bet;
 import com.BettingApi.BETTING.ENTITIES.BetSlip;
 import com.BettingApi.BETTING.ENTITIES.Users;
 import com.BettingApi.BETTING.EXCEPTIONS.UserNotFoundException;
-import com.BettingApi.BETTING.REPOSITORIES.betRepository;
-import com.BettingApi.BETTING.REPOSITORIES.betSlipRepository;
-import com.BettingApi.BETTING.REPOSITORIES.userRepository;
+import com.BettingApi.BETTING.REPOSITORIES.BetRepository;
+import com.BettingApi.BETTING.REPOSITORIES.BetSlipRepository;
+import com.BettingApi.BETTING.REPOSITORIES.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,14 +18,14 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class betSlipService {
+public class BetSlipService {
 
-    private final userRepository userRepository;
-    private final betSlipRepository betSlipRepository;
-    private final betRepository betRepository;
+    private final UserRepository userRepository;
+    private final BetSlipRepository betSlipRepository;
+    private final BetRepository betRepository;
 
 
-    public UserBetslipResponseDTO getBetSlipsByPhoneNumber(String phoneNumber) {
+    public UserBetslipResponseDto getBetSlipsByPhoneNumber(String phoneNumber) {
 
         Users user = userRepository.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new UserNotFoundException("User not found with phone number: " + phoneNumber));
@@ -34,24 +34,22 @@ public class betSlipService {
         List<BetSlip> betSlips = betSlipRepository.findByBet_Users(user);
 
 
-        List<BetslipDTO> betslipDTOList = betSlips.stream()
+        List<BetSlipDto> betSlipDtoList = betSlips.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
 
         UserDto users = convertToUserDto(user);
 
 
-        UserBetslipResponseDTO response = new UserBetslipResponseDTO();
+        UserBetslipResponseDto response = new UserBetslipResponseDto();
         response.setUser(users);
-        response.setBetSlips(betslipDTOList);
+        response.setBetSlips(betSlipDtoList);
 
         return response;
     }
 
 
-
-
-    public List<BetslipDTO> getBetSlipsByPhoneNumberAndBetId(String phoneNumber, Long betId) {
+    public List<BetSlipDto> getBetSlipsByPhoneNumberAndBetId(String phoneNumber, Long betId) {
 
         Users user = userRepository.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new UserNotFoundException("User not found with phone number: " + phoneNumber));
@@ -73,8 +71,8 @@ public class betSlipService {
     }
 
     // Convert BetSlip entity to DTO
-    private BetslipDTO convertToDto(BetSlip betSlip) {
-        BetslipDTO betslipDTO = new BetslipDTO();
+    private BetSlipDto convertToDto(BetSlip betSlip) {
+        BetSlipDto betslipDTO = new BetSlipDto();
         betslipDTO.setBetSlipId(betSlip.getBetSlipId());
         betslipDTO.setMatchInfo(betSlip.getMatchInfo());
         betslipDTO.setMarket(betSlip.getMarket());

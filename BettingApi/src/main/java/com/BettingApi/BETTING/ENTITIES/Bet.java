@@ -1,52 +1,50 @@
 package com.BettingApi.BETTING.ENTITIES;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 @Data
 @Entity
-@Table(name = "Bet")
+@Table(name = "bet")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Bet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "betID")
-    private Long betID;
+    @Column(name = "bet_id")
+    private Long betId;
 
-    @Column(name = "betPlacedOn")
+    @Column(name = "bet_placed_on")
     private String betPlacedOn;
 
-    @Column(name = "totalGames")
+    @Column(name = "total_games")
     private int totalGames;
 
     @Column(name = "stake")
-    private Double stake;
+    private double stake;
 
-    @Column(name = "totalOdds")
-    private Double totalOdds;
+    @Column(name = "total_odds")
+    private double totalOdds;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    @JsonProperty("status")
-    private betStatus status = betStatus.PENDING_PAYOUTS;
+    private BetStatus status = BetStatus.PENDING_PAYOUTS;
 
-    @Column(name="possibleWin")
+    @Column(name = "possible_win")
     private Long possibleWin;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "betID")
-    @JsonIgnore
+    @JoinColumn(name = "bet_id")
     private List<BetSlip> betSlips;
 
 
     @ManyToOne
-    @JoinColumn(name = "userid")
+    @JoinColumn(name = "user_id")
     private Users users;
 
 

@@ -1,5 +1,6 @@
 package com.BettingApi.BETTING.DTOS;
-import com.BettingApi.BETTING.ENTITIES.betStatus;
+
+import com.BettingApi.BETTING.ENTITIES.BetStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,6 @@ public class BetDto {
     private int totalGames;
     private Double stake;
     private Double totalOdds;
-    private betStatus status;
+    private BetStatus status;
     private Long possibleWin;
 }

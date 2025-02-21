@@ -1,11 +1,9 @@
 package com.BettingApi.BETTING.ENTITIES;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "odds")
@@ -16,21 +14,18 @@ public class Odds {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "oddsId")
+    @Column(name = "odds_id")
     private Long oddsId;
 
-    @Column(name = "oddType")
+    @Column(name = "odd_type")
     private String oddType;
 
-    @Column(name = "oddsValue")
-    private Double oddsValue; // The value of the odds for a market
+    @Column(name = "odds_value")
+    private double oddsValue; // The value of the odds for a market
 
-   @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "marketId")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "market_id")
     private Markets market;
-
-
-
 
 
 }

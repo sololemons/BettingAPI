@@ -1,6 +1,10 @@
 package com.BettingApi.BETTING.ENTITIES;
+
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -8,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "users")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,19 +20,17 @@ import java.util.List;
 public class Users implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "phoneNumber" , unique = true)
+    @Column(name = "phone_number", unique = true)
     private String phoneNumber;
 
     @Column(name = "password")
     private String password;
-    
-    @Column(name="accountBalance")
-    private double accountBalance = 0.0;
-    
 
+    @Column(name = "account_balance")
+    private double accountBalance = 0.0;
 
 
     @Override
@@ -41,8 +43,6 @@ public class Users implements UserDetails {
     public String getUsername() {
         return phoneNumber;
     }
-
-
 
 
     @Override

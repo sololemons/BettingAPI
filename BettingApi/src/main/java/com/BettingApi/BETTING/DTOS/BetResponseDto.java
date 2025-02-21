@@ -1,26 +1,25 @@
 package com.BettingApi.BETTING.DTOS;
 
-import com.BettingApi.BETTING.ENTITIES.BetSlip;
-
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class BetResponseDTO {
+public class BetResponseDto {
     private Long betID;
     private String betPlacedOn;
     private int totalGames;
-    private Double stake;
-    private Double totalOdds;
+    private double stake;
+    private double totalOdds;
     private Long possibleWin;
     private UserDto user;
-    private List<BetslipDTO> betSlips;
+    private List<BetSlipDto> betSlips;
 
 
 

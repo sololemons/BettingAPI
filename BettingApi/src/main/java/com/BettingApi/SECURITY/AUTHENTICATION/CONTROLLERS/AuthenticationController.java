@@ -1,4 +1,5 @@
 package com.BettingApi.SECURITY.AUTHENTICATION.CONTROLLERS;
+
 import com.BettingApi.SECURITY.AUTHENTICATION.ENTITIES.AuthenticationRequest;
 import com.BettingApi.SECURITY.AUTHENTICATION.ENTITIES.AuthenticationResponse;
 import com.BettingApi.SECURITY.AUTHENTICATION.ENTITIES.RegisterRequest;
@@ -17,9 +18,6 @@ public class AuthenticationController {
 
     private final AuthenticationService service;
 
-
-
-
     //Register an User
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
@@ -28,7 +26,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.register(request));
     }
 
-
+    //Authenticate An User
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request

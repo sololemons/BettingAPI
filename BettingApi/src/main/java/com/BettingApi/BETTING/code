@@ -107,7 +107,7 @@ public class placeBetService {
 
 
         // Convert BetSlip entities to BetSlipDTO
-        List<BetslipDTO> betSlipDTOs = betSlips.
+        List<BetslipDTO> betSlipDtos = betSlips.
 
                 stream().
                 map(this::convertToBetslipDTO).
@@ -121,7 +121,7 @@ public class placeBetService {
                 .stake(bet.getStake())
                 .totalOdds(bet.getTotalOdds())
                 .possibleWin(bet.getPossibleWin())
-                .betSlips(betSlipDTOs)
+                .betSlips(betSlipDtos)
                 .user(userDTO)
                 .build();
 

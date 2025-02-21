@@ -2,10 +2,11 @@ package com.BettingApi.BETTING.DTOS;
 
 
 import lombok.Data;
+
 import java.util.List;
 
 @Data
-public class UserBetslipResponseDTO {
+public class UserBetslipResponseDto {
     private UserDto user;
-    private List<BetslipDTO> betSlips;
+    private List<BetSlipDto> betSlips;
 }

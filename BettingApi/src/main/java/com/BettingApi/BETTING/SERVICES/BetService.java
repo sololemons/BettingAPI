@@ -1,10 +1,11 @@
 package com.BettingApi.BETTING.SERVICES;
+
 import com.BettingApi.BETTING.DTOS.BetDto;
 import com.BettingApi.BETTING.ENTITIES.Bet;
 import com.BettingApi.BETTING.ENTITIES.Users;
 import com.BettingApi.BETTING.EXCEPTIONS.UserNotFoundException;
-import com.BettingApi.BETTING.REPOSITORIES.betRepository;
-import com.BettingApi.BETTING.REPOSITORIES.userRepository;
+import com.BettingApi.BETTING.REPOSITORIES.BetRepository;
+import com.BettingApi.BETTING.REPOSITORIES.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +14,10 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class betService {
+public class BetService {
 
-    private final userRepository userRepository;
-    private final betRepository betRepository;
+    private final UserRepository userRepository;
+    private final BetRepository betRepository;
 
 
     public List<BetDto> getBetsByPhoneNumber(String phoneNumber) {

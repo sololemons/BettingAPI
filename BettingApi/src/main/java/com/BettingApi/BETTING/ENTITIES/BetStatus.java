@@ -1,8 +1,7 @@
 package com.BettingApi.BETTING.ENTITIES;
 
 
-
-public enum betStatus {
+public enum BetStatus {
 
     SUCCESSFUL,
     PENDING_PAYOUTS,
