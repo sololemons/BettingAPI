@@ -38,7 +38,7 @@ public class Bet {
     @Column(name = "possible_win")
     private Long possibleWin;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "bet_id")
     private List<BetSlip> betSlips;
 

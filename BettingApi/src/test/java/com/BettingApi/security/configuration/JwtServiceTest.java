@@ -89,7 +89,7 @@ class JwtServiceTest {
     void testIfTheWrongUsernameInTheTokenWillBeCaught() {
         String tokenWithWrongUser = Jwts.builder()
                 .setClaims(new HashMap<>())
-                .setSubject(userDetails.getUsername())
+                .setSubject("WrongUserName")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                 .signWith(jwtService.getSignInKey(), SignatureAlgorithm.HS256)

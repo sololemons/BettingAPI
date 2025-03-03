@@ -7,11 +7,12 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 🔹 Handle Specific Business Exceptions
+    //  Handle Specific Business Exceptions
     @ExceptionHandler({MissingFieldException.class, MatchNotFoundException.class, MarketNotFoundException.class,
             OddsNotFoundException.class, InsufficientBalanceException.class})
     public ResponseEntity<Map<String, Object>> handleBadRequestExceptions(RuntimeException ex) {
@@ -26,7 +27,7 @@ public class GlobalExceptionHandler {
     }
 
 
-    // 🔹 Handle Unauthorized Exceptions
+
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleNotFoundExceptions(UserNotFoundException ex) {
         return buildErrorResponse(HttpStatus.NOT_FOUND, "NOT FOUND", ex.getMessage());
@@ -36,11 +37,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleUnprocessedExceptions(MissMatchOddsException ex) {
         return buildErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, "UNPROCESSABLE ENTITY", ex.getMessage());
     }
-    // ❌ Handle "Endpoint Not Found" (404) Before Generic Exception
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleNoHandlerFoundException(NoHandlerFoundException ex) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, "Not Found", "The requested endpoint does not exist.");
-    }
+
+
 
 
     //  Handle Generic Exceptions
@@ -53,7 +51,7 @@ public class GlobalExceptionHandler {
     //  Helper Method for Consistent Error Responses
     private ResponseEntity<Map<String, Object>> buildErrorResponse(HttpStatus status, String error, String message) {
         Map<String, Object> response = new HashMap<>();
-        response.put("status", status.value());
+        response.put("status", Optional.of(status.value()));
         response.put("error", error);
         response.put("message", message);
         return new ResponseEntity<>(response, status);

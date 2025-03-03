@@ -17,20 +17,20 @@ public class Games {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "matchId")
+    @Column(name = "match_id")
     private Long matchId;
 
-    @Column(name = "homeTeam")
+    @Column(name = "home_team")
     private String homeTeam;
 
-    @Column(name = "awayTeam")
+    @Column(name = "away_team")
     private String awayTeam;
 
-    @Column(name = "startTime")
+    @Column(name = "start_time")
     private LocalDateTime startTime;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "matchId")
-    private List<Markets> markets; // Each match can have multiple markets
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "match_id")
+    private List<Markets> markets;
 
 }

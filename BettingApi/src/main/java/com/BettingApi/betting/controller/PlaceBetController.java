@@ -19,16 +19,12 @@ import java.util.List;
 public class PlaceBetController {
 
     private final PlaceBetService service;
-    private final JwtService jwtService;
-    private final BetValidationUtil betValidationUtil;
+
 
     @PostMapping("/add/bet")
     public ResponseEntity<?> placeBet(
             @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody PlaceBetRequestDto placeBetRequestDTO) {
-
-
-
 
 
         List<BetResponseDto> response = service.placeBets(placeBetRequestDTO, authHeader);

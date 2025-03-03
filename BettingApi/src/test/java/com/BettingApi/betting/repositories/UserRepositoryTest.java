@@ -22,7 +22,7 @@ public class UserRepositoryTest {
     public void testFindByPhoneNumberAndUserExists() {
         // Given A user is saved in the database with a certain phone Number
         Users user = new Users();
-        user.setPhoneNumber("123456789");
+        user.setPhoneNumber("0706725681");
         userRepository.save(user);
 
         // When

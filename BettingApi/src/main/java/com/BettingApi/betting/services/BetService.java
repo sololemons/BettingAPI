@@ -8,6 +8,7 @@ import com.BettingApi.betting.repositories.BetRepository;
 import com.BettingApi.betting.repositories.UserRepository;
 import com.BettingApi.security.configuration.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class BetService {
+
 
     private final UserRepository userRepository;
     private final BetRepository betRepository;

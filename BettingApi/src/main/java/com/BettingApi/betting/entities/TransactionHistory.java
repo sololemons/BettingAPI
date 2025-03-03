@@ -25,20 +25,20 @@ public class TransactionHistory {
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
 
-    @Column(name = "transactionRef", unique = true, nullable = false, updatable = false)
+    @Column(name = "transaction_ref", unique = true, nullable = false, updatable = false)
     private String transactionRef;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bet_id")
     private Bet bet;
 
     @Column(name = "transaction_date", nullable = false)
     private LocalDateTime transactionDate = LocalDateTime.now();
-    @Column(name = "current_Balance", nullable = false)
+    @Column(name = "current_balance", nullable = false)
     private double currentBalance;
 
 

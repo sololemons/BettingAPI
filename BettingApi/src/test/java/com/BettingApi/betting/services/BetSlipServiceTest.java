@@ -9,6 +9,7 @@ import com.BettingApi.betting.exceptions.UserNotFoundException;
 import com.BettingApi.betting.repositories.BetRepository;
 import com.BettingApi.betting.repositories.BetSlipRepository;
 import com.BettingApi.betting.repositories.UserRepository;
+import com.BettingApi.security.configuration.JwtService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @Transactional
 class BetSlipServiceTest {
+    @Mock
+    private JwtService jwtService;
 
     @Mock
     private UserRepository userRepository;
@@ -62,10 +65,12 @@ class BetSlipServiceTest {
     // Successful case testGetBetSlipsByPhoneNumber_Success Method
     @Test
     void testGetBetSlipsByPhoneNumber_Success() {
+        String authHeader = "mockAuthHeader";
+        when(jwtService.extractUserName(authHeader.substring(7))).thenReturn(testUser.getPhoneNumber());
         when(userRepository.findByPhoneNumber("0706725681")).thenReturn(Optional.of(testUser));
         when(betSlipRepository.findByBet_Users(testUser)).thenReturn(List.of(testBetSlip));
 
-        UserBetslipResponseDto response = betSlipService.getBetSlipsByPhoneNumber(testUser.getPhoneNumber());
+        UserBetslipResponseDto response = betSlipService.getBetSlipsByPhoneNumber(authHeader);
 
         assertThat(response.getUser().getPhoneNumber()).isEqualTo(testUser.getPhoneNumber());
         assertThat(response.getBetSlips()).hasSize(1);
@@ -78,9 +83,11 @@ class BetSlipServiceTest {
     // User Not Found case
     @Test
     void testGetBetSlipsByPhoneNumberAndUserNotFound() {
+        String authHeader = "mockAuthHeader";
+        when(jwtService.extractUserName(authHeader.substring(7))).thenReturn("0706720623");
         when(userRepository.findByPhoneNumber("0706720623")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> betSlipService.getBetSlipsByPhoneNumber("0706720623"))
+        assertThatThrownBy(() -> betSlipService.getBetSlipsByPhoneNumber(authHeader))
                 .isInstanceOf(UserNotFoundException.class)
                 .hasMessageContaining("User not found with phone number: 0706720623");
 
@@ -91,11 +98,13 @@ class BetSlipServiceTest {
     // Successful case for testGetBetSlipsByPhoneNumberAndBetId_Success method
     @Test
     void testGetBetSlipsByPhoneNumberAndBetId_Success() {
+        String authHeader = "mockAuthHeader";
+        when(jwtService.extractUserName(authHeader.substring(7))).thenReturn(testUser.getPhoneNumber());
         when(userRepository.findByPhoneNumber(testUser.getPhoneNumber())).thenReturn(Optional.of(testUser));
         when(betRepository.findById(testBet.getBetId())).thenReturn(Optional.of(testBet));
         when(betSlipRepository.findByBet(testBet)).thenReturn(List.of(testBetSlip));
 
-        List<BetSlipDto> betSlipDtos = betSlipService.getBetSlipsByPhoneNumberAndBetId(testUser.getPhoneNumber(), testBet.getBetId());
+        List<BetSlipDto> betSlipDtos = betSlipService.getBetSlipsByPhoneNumberAndBetId(authHeader, testBet.getBetId());
 
         assertThat(betSlipDtos).hasSize(1);
         assertThat(betSlipDtos.get(0).getPick()).isEqualTo("Home Team Wins");
@@ -108,9 +117,11 @@ class BetSlipServiceTest {
     //User Not Found Case
     @Test
     void testGetBetSlipsByPhoneNumberAndBetIdAndUserNotFound() {
+        String authHeader = "mockAuthHeader";
+        when(jwtService.extractUserName(authHeader.substring(7))).thenReturn("0720623014");
         when(userRepository.findByPhoneNumber("0720623014")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> betSlipService.getBetSlipsByPhoneNumberAndBetId("0720623014", 20L))
+        assertThatThrownBy(() -> betSlipService.getBetSlipsByPhoneNumberAndBetId(authHeader , 20L))
                 .isInstanceOf(UserNotFoundException.class)
                 .hasMessageContaining("User not found with phone number: 0720623014");
 
@@ -121,10 +132,13 @@ class BetSlipServiceTest {
     // Bet Not Found Case
     @Test
     void testGetBetSlipsByPhoneNumberAndBetId_BetNotFound() {
+
+        String authHeader = "mockAuthHeader";
+        when(jwtService.extractUserName(authHeader.substring(7))).thenReturn(testUser.getPhoneNumber());
         when(userRepository.findByPhoneNumber(testUser.getPhoneNumber())).thenReturn(Optional.of(testUser));
         when(betRepository.findById(20L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> betSlipService.getBetSlipsByPhoneNumberAndBetId(testUser.getPhoneNumber(), 20L))
+        assertThatThrownBy(() -> betSlipService.getBetSlipsByPhoneNumberAndBetId(authHeader, 20L))
                 .isInstanceOf(UserNotFoundException.class)
                 .hasMessageContaining("Bet not found");
 

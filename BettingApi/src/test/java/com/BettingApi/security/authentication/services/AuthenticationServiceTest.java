@@ -8,7 +8,6 @@ import com.BettingApi.security.authentication.entities.AuthenticationRequest;
 import com.BettingApi.security.authentication.entities.AuthenticationResponse;
 import com.BettingApi.security.authentication.entities.RegisterRequest;
 import com.BettingApi.security.configuration.JwtService;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,8 +26,11 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class AuthenticationServiceTest {
 
+
     @Mock
     private PasswordEncoder passwordEncoder;
+    @Mock
+    private AuthenticationManager authenticationManager;
 
     @Mock
     private JwtService jwtService;
@@ -59,6 +61,7 @@ class AuthenticationServiceTest {
     void testAuthenticateIfSuccess() {
         when(userRepository.findByPhoneNumber(user.getPhoneNumber())).thenReturn(Optional.of(user));
         when(jwtService.generateAuthenticationToken(user)).thenReturn("mockJwtToken");
+        when(authenticationManager.authenticate(any())).thenReturn(null);
         AuthenticationResponse response = authenticationService.authenticate(authRequest);
 
         assertThat(response).isNotNull();
@@ -67,7 +70,6 @@ class AuthenticationServiceTest {
     @Test
     void testAuthenticateIfUserIsNotFound() {
         when(userRepository.findByPhoneNumber(authRequest.getPhoneNumber())).thenReturn(Optional.empty());
-
         assertThatThrownBy(() -> authenticationService.authenticate(authRequest))
                 .isInstanceOf(UserNotFoundException.class)
                 .hasMessageContaining("User not found with phone number: " + authRequest.getPhoneNumber());

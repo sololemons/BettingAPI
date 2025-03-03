@@ -33,16 +33,14 @@ public class BetSlipService {
 
         String phoneNumber = jwtService.extractUserName(token);
 
-        Users user = userRepository.findByPhoneNumber(phoneNumber)
-                .orElseThrow(() -> new UserNotFoundException("User not found with phone number: " + phoneNumber));
+        Users user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() -> new UserNotFoundException("User" +
+                " not found with phone number: " + phoneNumber));
 
 
         List<BetSlip> betSlips = betSlipRepository.findByBet_Users(user);
 
 
-        List<BetSlipDto> betSlipDtoList = betSlips.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+        List<BetSlipDto> betSlipDtoList = betSlips.stream().map(this::convertToDto).collect(Collectors.toList());
 
         UserDto users = convertToUserDto(user);
 
@@ -55,14 +53,15 @@ public class BetSlipService {
     }
 
 
-    public List<BetSlipDto> getBetSlipsByPhoneNumberAndBetId(String phoneNumber, Long betId) {
+    public List<BetSlipDto> getBetSlipsByPhoneNumberAndBetId(String authHeader, Long betId) {
+        String token = authHeader.substring(7);
+        String phoneNumber = jwtService.extractUserName(token);
 
-        Users user = userRepository.findByPhoneNumber(phoneNumber)
-                .orElseThrow(() -> new UserNotFoundException("User not found with phone number: " + phoneNumber));
+        Users user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() -> new UserNotFoundException("User" +
+                " not found with phone number: " + phoneNumber));
 
 
-        Bet bet = betRepository.findById(betId)
-                .orElseThrow(() -> new UserNotFoundException("Bet not found"));
+        Bet bet = betRepository.findById(betId).orElseThrow(() -> new UserNotFoundException("Bet not found"));
 
 
         if (!bet.getUsers().equals(user)) {

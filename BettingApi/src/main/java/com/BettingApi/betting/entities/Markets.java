@@ -22,8 +22,8 @@ public class Markets {
     @Column(name = "market_name")
     private String marketName;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "market_id")
-    private List<Odds> oddsList; // A market has multiple odds
+    private List<Odds> oddsList;
 
 }

@@ -11,7 +11,7 @@ public class BetSlip {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "betSlip_id")
+    @Column(name = "betslip_id")
     private Long betSlipId;
 
     @Embedded
@@ -29,7 +29,6 @@ public class BetSlip {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    @JsonProperty("status")
     private BetStatus status = BetStatus.PENDING_PAYOUTS;
 
     @ManyToOne

@@ -55,7 +55,7 @@ public class JwtService {
     }
 
 
-    Key getSignInKey() {
+    public Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
@@ -71,7 +71,8 @@ public class JwtService {
         claims.put("token_type", "registration");
         return generateToken(claims, userDetails);
     }
-//Method To Generate A token
+
+    //Method To Generate A token
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts.builder()
                 .setClaims(extraClaims)

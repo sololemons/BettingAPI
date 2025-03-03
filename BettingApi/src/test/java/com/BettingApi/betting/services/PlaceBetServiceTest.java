@@ -7,6 +7,8 @@ import com.BettingApi.betting.entities.*;
 import com.BettingApi.betting.exceptions.InsufficientBalanceException;
 import com.BettingApi.betting.exceptions.MissMatchOddsException;
 import com.BettingApi.betting.repositories.*;
+import com.BettingApi.betting.utility.BetValidationUtil;
+import com.BettingApi.security.configuration.JwtService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,16 +21,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import static org.assertj.core.api.Assertions.*;
 
-
-
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @Transactional
 @ExtendWith(MockitoExtension.class)
 class PlaceBetServiceTest {
 
+
+    @Mock
+    private JwtService jwtService;
 
     @Mock
     private BetRepository betsRepository;
@@ -42,7 +46,10 @@ class PlaceBetServiceTest {
     private GamesRepository gamesRepository;
     @Mock
     private TransactionRepository transactionRepository;
-
+    @Mock
+    private BetValidationUtil validationUtil;
+    @Mock
+    private BetSlipRepository betSlipRepository;
 
     @InjectMocks
     private PlaceBetService placeBetService;
@@ -56,6 +63,8 @@ class PlaceBetServiceTest {
     private Odds odds;
     private Bet bet;
     private TransactionHistory transactionHistory;
+    private BetSlip betSlip;
+
 
     @BeforeEach
     void setUp() {
@@ -100,6 +109,11 @@ class PlaceBetServiceTest {
         bet.setStake(placeBetRequestDTO.getStake());
         bet.setTotalOdds(2.0);
 
+        betSlip = new BetSlip();
+        betSlip.setBetSlipId(1L);
+        betSlip.setMarket("1x2");
+
+
         transactionHistory = new TransactionHistory();
         transactionHistory.setBet(bet);
         transactionHistory.setAmount(placeBetRequestDTO.getStake());
@@ -112,21 +126,35 @@ class PlaceBetServiceTest {
 
     @Test
     void testPlaceBetsProcessSuccess() {
+
+
+        String authHeader = "mockAuthorisationHeader";
+        when(jwtService.extractUserName(authHeader.substring(7))).thenReturn(user.getPhoneNumber());
         when(userRepository.findByPhoneNumber(anyString())).thenReturn(Optional.of(user));
         when(oddRepository.findById(anyLong())).thenReturn(Optional.of(odds));
         when(marketsRepository.findById(anyLong())).thenReturn(Optional.of(markets));
         when(gamesRepository.findById(anyLong())).thenReturn(Optional.of(games));
+        when(validationUtil.validateBetRequest(any(PlaceBetRequestDto.class))).thenReturn(true);
         when(transactionRepository.save(any(TransactionHistory.class))).thenReturn(transactionHistory);
         when(betsRepository.save(any(Bet.class))).thenReturn(bet);
+        when(betSlipRepository.save(any(BetSlip.class))).thenReturn(betSlip);
+        when(userRepository.save(any(Users.class))).thenReturn(user);
 
-        List<BetResponseDto> response = placeBetService.placeBets(placeBetRequestDTO, user.getPhoneNumber());
+
+        List<BetResponseDto> response = placeBetService.placeBets(placeBetRequestDTO, authHeader);
 
         verify(userRepository, times(1)).findByPhoneNumber(anyString());
         verify(oddRepository, times(2)).findById(anyLong());
         verify(marketsRepository, times(1)).findById(anyLong());
         verify(gamesRepository, times(1)).findById(anyLong());
+        verify(validationUtil,times(1)).validateBetRequest(any(PlaceBetRequestDto.class));
         verify(transactionRepository, times(1)).save(any(TransactionHistory.class));
         verify(betsRepository, times(1)).save(any(Bet.class));
+        verify(betSlipRepository, times(1)).save(any(BetSlip.class));
+        verify(userRepository, times(1)).save(any(Users.class));
+
+
+
 
         ArgumentCaptor<TransactionHistory> transactionCaptor = ArgumentCaptor.forClass(TransactionHistory.class);
         verify(transactionRepository).save(transactionCaptor.capture());
@@ -138,15 +166,20 @@ class PlaceBetServiceTest {
         assertThat(savedTransaction.getTransactionType()).isEqualTo(transactionHistory.getTransactionType());
         assertThat(user.getAccountBalance()).isEqualTo(500.0);
     }
+
     @Test
     void testPlaceBetsFailsDueToInsufficientBalance() {
-        user.setAccountBalance(100.0);
+        String authHeader = "mockAuthorisationHeader";
+        when(jwtService.extractUserName(authHeader.substring(7))).thenReturn(user.getPhoneNumber());
         when(userRepository.findByPhoneNumber(anyString())).thenReturn(Optional.of(user));
+        when(validationUtil.validateBetRequest(any(PlaceBetRequestDto.class))).thenReturn(true);
+        user.setAccountBalance(100.0);
 
-        assertThatThrownBy(() -> placeBetService.placeBets(placeBetRequestDTO, user.getPhoneNumber()))
+
+        assertThatThrownBy(() -> placeBetService.placeBets(placeBetRequestDTO, authHeader))
                 .isInstanceOf(InsufficientBalanceException.class)
                 .hasMessage("Insufficient balance. Your account balance is 100.0, but you need at least 500.0 to place this bet.");
-
+        verify(validationUtil, times(1)).validateBetRequest(any(PlaceBetRequestDto.class));
         verify(userRepository, times(1)).findByPhoneNumber(anyString());
     }
 
@@ -156,10 +189,13 @@ class PlaceBetServiceTest {
         when(gamesRepository.findById(anyLong())).thenReturn(Optional.of(new Games()));
         when(marketsRepository.findById(anyLong())).thenReturn(Optional.of(new Markets()));
 
+
         Odds changedOdds = new Odds();
         changedOdds.setOddsId(1L);
         changedOdds.setOddsValue(2.1);
         when(oddRepository.findById(anyLong())).thenReturn(Optional.of(changedOdds));
+        when(validationUtil.validateBetRequest(any(PlaceBetRequestDto.class))).thenReturn(true);
+        when(jwtService.extractUserName(any())).thenReturn(user.getPhoneNumber());
 
         assertThatThrownBy(() -> placeBetService.placeBets(placeBetRequestDTO, user.getPhoneNumber()))
                 .isInstanceOf(MissMatchOddsException.class)

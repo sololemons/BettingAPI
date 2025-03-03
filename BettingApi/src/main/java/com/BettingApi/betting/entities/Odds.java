@@ -21,9 +21,9 @@ public class Odds {
     private String oddType;
 
     @Column(name = "odds_value")
-    private double oddsValue; // The value of the odds for a market
+    private double oddsValue;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "market_id")
     private Markets market;
 

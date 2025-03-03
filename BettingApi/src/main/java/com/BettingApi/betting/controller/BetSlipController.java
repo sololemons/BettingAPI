@@ -35,10 +35,9 @@ public class BetSlipController {
     public ResponseEntity<List<BetSlipDto>> getBetSlipsByUserAndBetId(
             @RequestHeader("Authorization") String authHeader, @PathVariable Long betId) {
 
-        String token = authHeader.substring(7);
-        String phoneNumber = jwtService.extractUserName(token);
 
-        List<BetSlipDto> betSlips = betSlipService.getBetSlipsByPhoneNumberAndBetId(phoneNumber, betId);
+
+        List<BetSlipDto> betSlips = betSlipService.getBetSlipsByPhoneNumberAndBetId(authHeader, betId);
         return ResponseEntity.ok(betSlips);
     }
 }
