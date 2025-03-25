@@ -40,14 +40,6 @@ public class GlobalExceptionHandler {
 
 
 
-
-    //  Handle Generic Exceptions
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGenericExceptions(Exception ex) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Request", "Invalid JSON request " +
-                "syntax or processing error!");
-    }
-
     //  Helper Method for Consistent Error Responses
     private ResponseEntity<Map<String, Object>> buildErrorResponse(HttpStatus status, String error, String message) {
         Map<String, Object> response = new HashMap<>();

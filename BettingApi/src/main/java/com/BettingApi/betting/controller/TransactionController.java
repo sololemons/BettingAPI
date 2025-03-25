@@ -23,4 +23,8 @@ public class TransactionController {
 
         return ResponseEntity.ok(transactionService.getTransactionHistory(authHeader));
     }
+    @GetMapping("/all")
+    public ResponseEntity<List<TransactionDto>>getTransactionHistory() {
+        return ResponseEntity.ok(transactionService.getAllTransactions());
+    }
 }

@@ -75,6 +75,7 @@ public class BetSlipService {
         return betSlips.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
+
     // Convert BetSlip entity to DTO
     private BetSlipDto convertToDto(BetSlip betSlip) {
         BetSlipDto betslipDTO = new BetSlipDto();
@@ -94,5 +95,11 @@ public class BetSlipService {
         userDto.setId(user.getId());
         userDto.setPhoneNumber(user.getPhoneNumber());
         return userDto;
+    }
+
+    public List<BetSlipDto> getBetslipsByBetId(Long betId) {
+        List<BetSlip> betSlips = betSlipRepository.findByBet_BetId(betId);
+        return betSlips.stream().map(this::convertToDto).collect(Collectors.toList());
+
     }
 }

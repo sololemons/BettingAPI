@@ -13,4 +13,5 @@ public interface BetSlipRepository extends JpaRepository<BetSlip, Long> {
     List<BetSlip> findByBet_Users(Users users);
 
     List<BetSlip> findByBet(Bet bet);
+    List<BetSlip>findByBet_BetId(Long betId);
 }

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/BettingApi.iml" filepath="$PROJECT_DIR$/.idea/BettingApi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BettingApi/BettingApi.iml" filepath="$PROJECT_DIR$/BettingApi/BettingApi.iml" />
     </modules>
   </component>
 </project>

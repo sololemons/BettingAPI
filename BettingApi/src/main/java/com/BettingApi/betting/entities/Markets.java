@@ -1,5 +1,6 @@
 package com.BettingApi.betting.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,8 +23,9 @@ public class Markets {
     @Column(name = "market_name")
     private String marketName;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "market_id")
+    @JsonManagedReference
     private List<Odds> oddsList;
 
 }

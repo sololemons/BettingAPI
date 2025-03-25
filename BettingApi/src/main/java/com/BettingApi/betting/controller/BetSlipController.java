@@ -40,4 +40,8 @@ public class BetSlipController {
         List<BetSlipDto> betSlips = betSlipService.getBetSlipsByPhoneNumberAndBetId(authHeader, betId);
         return ResponseEntity.ok(betSlips);
     }
+    @GetMapping("/id")
+    public ResponseEntity<List<BetSlipDto>> getBetslipsByBetId(@RequestParam Long betId) {
+        return ResponseEntity.ok(betSlipService.getBetslipsByBetId(betId));
+    }
 }

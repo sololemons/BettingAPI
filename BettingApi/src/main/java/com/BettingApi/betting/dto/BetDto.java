@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BetDto {
 
-    private Long betID;
+    private Long betId;
     private String betPlacedOn;
     private int totalGames;
     private Double stake;

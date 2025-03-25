@@ -1,14 +1,12 @@
 package com.BettingApi.betting.controller;
 
 import com.BettingApi.betting.dto.BetDto;
+import com.BettingApi.betting.entities.Bet;
 import com.BettingApi.betting.services.BetService;
 import com.BettingApi.security.configuration.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,5 +30,9 @@ public class BetController {
         List<BetDto> bets = betService.getBetsByPhoneNumber(authHeader);
 
         return ResponseEntity.ok(bets);
+    }
+    @GetMapping("/get/id")
+    public ResponseEntity<List<BetDto>> getBetById(@RequestParam Long id) {
+        return ResponseEntity.ok(betService.getBetsById(id));
     }
 }

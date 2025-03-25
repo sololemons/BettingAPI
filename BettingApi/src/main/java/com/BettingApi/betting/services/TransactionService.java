@@ -33,4 +33,8 @@ public class TransactionService {
                 transaction.getTransactionRef(), transaction.getTransactionDate(), transaction.getCurrentBalance(), transaction.getUser().getPhoneNumber());
     }
 
+    public List<TransactionDto> getAllTransactions() {
+        List<TransactionHistory> transactions = transactionRepository.findAll();
+        return transactions.stream().map(this::convertToDTO).toList();
+    }
 }

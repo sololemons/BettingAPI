@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,7 +47,7 @@ public class BetService {
     private BetDto convertToDto(Bet bet) {
 
         BetDto betDto = new BetDto();
-        betDto.setBetID(bet.getBetId());
+        betDto.setBetId(bet.getBetId());
         betDto.setBetPlacedOn(bet.getBetPlacedOn());
         betDto.setTotalGames(bet.getTotalGames());
         betDto.setStake(bet.getStake());
@@ -56,4 +57,9 @@ public class BetService {
 
         return betDto;
     }
+
+    public List <BetDto> getBetsById(Long id) {
+        List<Bet> bets = betRepository.findByUsers_Id(id);
+        return bets.stream().map(this::convertToDto).toList();
+}
 }
