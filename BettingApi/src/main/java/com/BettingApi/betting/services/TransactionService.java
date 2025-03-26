@@ -37,4 +37,14 @@ public class TransactionService {
         List<TransactionHistory> transactions = transactionRepository.findAll();
         return transactions.stream().map(this::convertToDTO).toList();
     }
+
+    public List<TransactionDto>getTransactionById(Long id) {
+        List<TransactionHistory> transaction =transactionRepository.findByUser_Id(id);
+        return transaction.stream().map(this::convertToDTO).toList();
+    }
+
+    public List<TransactionDto> getTransactionsByRef(String transactionRef) {
+        List<TransactionHistory> transactionHistoryList = transactionRepository.findByTransactionRef(transactionRef);
+        return transactionHistoryList.stream().map(this::convertToDTO).toList();
+    }
 }

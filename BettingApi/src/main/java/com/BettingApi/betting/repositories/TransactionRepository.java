@@ -12,4 +12,7 @@ public interface TransactionRepository extends JpaRepository<TransactionHistory,
 
     List<TransactionHistory> findByUser_PhoneNumber(String phoneNumber);
 
+    List<TransactionHistory> findByUser_Id(Long id);
+
+    List<TransactionHistory> findByTransactionRef(String transactionRef);
 }

@@ -5,10 +5,7 @@ import com.BettingApi.betting.entities.TransactionHistory;
 import com.BettingApi.betting.services.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,5 +23,13 @@ public class TransactionController {
     @GetMapping("/all")
     public ResponseEntity<List<TransactionDto>>getTransactionHistory() {
         return ResponseEntity.ok(transactionService.getAllTransactions());
+    }
+    @GetMapping("/get/id")
+    public ResponseEntity<List<TransactionDto>> getTransactionById(@RequestParam Long id) {
+        return ResponseEntity.ok(transactionService.getTransactionById(id));
+    }
+    @GetMapping("/search/transactionRef")
+    public ResponseEntity<List<TransactionDto>> getTransactionByRef(@RequestParam String transactionRef) {
+        return  ResponseEntity.ok(transactionService.getTransactionsByRef(transactionRef));
     }
 }
