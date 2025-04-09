@@ -31,15 +31,12 @@ public class PlaceBetService {
     private final BetSlipRepository betSlipRepository;
 
 
-
-
     @Transactional
     public List<BetResponseDto> placeBets(PlaceBetRequestDto placeBetRequestDTOS, String authHeader) {
 
         String token = authHeader.substring(7);
 
         String phoneNumber = jwtService.extractUserName(token);
-
 
 
         Users user = userRepository.findByPhoneNumber(phoneNumber)
@@ -57,7 +54,6 @@ public class PlaceBetService {
             throw new InsufficientBalanceException("Insufficient balance. Your account balance is " + accountBalance +
                     ", but you need at least " + totalStake + " to place this bet.");
         }
-
 
 
         user.setAccountBalance(accountBalance - totalStake);

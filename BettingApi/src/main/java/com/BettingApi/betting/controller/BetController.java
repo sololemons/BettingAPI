@@ -35,4 +35,10 @@ public class BetController {
     public ResponseEntity<List<BetDto>> getBetById(@RequestParam Long id) {
         return ResponseEntity.ok(betService.getBetsById(id));
     }
+    @GetMapping("/all")
+    public ResponseEntity<List<BetDto>> getAllBets() {
+
+        return ResponseEntity.ok(betService.getAllBets());
+    }
+
 }

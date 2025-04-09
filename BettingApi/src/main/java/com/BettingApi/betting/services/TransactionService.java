@@ -38,8 +38,8 @@ public class TransactionService {
         return transactions.stream().map(this::convertToDTO).toList();
     }
 
-    public List<TransactionDto>getTransactionById(Long id) {
-        List<TransactionHistory> transaction =transactionRepository.findByUser_Id(id);
+    public List<TransactionDto> getTransactionById(Long id) {
+        List<TransactionHistory> transaction = transactionRepository.findByUser_Id(id);
         return transaction.stream().map(this::convertToDTO).toList();
     }
 

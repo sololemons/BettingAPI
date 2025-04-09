@@ -34,7 +34,6 @@ public class SecurityConfig {
                         .requestMatchers("/betslip/**").permitAll()
                         .requestMatchers("/transaction/**").permitAll()
                         .requestMatchers("/games/**").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
 
                         .anyRequest().authenticated() // All other requests require authentication

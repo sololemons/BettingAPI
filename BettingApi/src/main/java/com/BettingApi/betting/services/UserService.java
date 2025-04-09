@@ -22,8 +22,10 @@ public class UserService {
 
     private UserDto convertToDto(Users user) {
         UserDto userDto = new UserDto();
+        userDto.setAccountBalance(user.getAccountBalance());
         userDto.setId(user.getId());
         userDto.setPhoneNumber(user.getPhoneNumber());
+        userDto.setUserSignUpDate(String.valueOf(user.getUserSignupDate()));
         return userDto;
     }
 
@@ -43,4 +45,8 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with phone number: " + phoneNumber));
     }
 
+    public List<UserDto> getAll() {
+        List<Users> users = userRepository.findAll();
+        return users.stream().map(this::convertToDto).toList();
+    }
 }

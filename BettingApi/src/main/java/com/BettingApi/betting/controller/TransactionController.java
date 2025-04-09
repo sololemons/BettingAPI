@@ -20,16 +20,19 @@ public class TransactionController {
 
         return ResponseEntity.ok(transactionService.getTransactionHistory(authHeader));
     }
+
     @GetMapping("/all")
-    public ResponseEntity<List<TransactionDto>>getTransactionHistory() {
+    public ResponseEntity<List<TransactionDto>> getTransactionHistory() {
         return ResponseEntity.ok(transactionService.getAllTransactions());
     }
+
     @GetMapping("/get/id")
     public ResponseEntity<List<TransactionDto>> getTransactionById(@RequestParam Long id) {
         return ResponseEntity.ok(transactionService.getTransactionById(id));
     }
+
     @GetMapping("/search/transactionRef")
     public ResponseEntity<List<TransactionDto>> getTransactionByRef(@RequestParam String transactionRef) {
-        return  ResponseEntity.ok(transactionService.getTransactionsByRef(transactionRef));
+        return ResponseEntity.ok(transactionService.getTransactionsByRef(transactionRef));
     }
 }

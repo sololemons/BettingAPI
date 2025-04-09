@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,6 +32,9 @@ public class Users implements UserDetails {
 
     @Column(name = "account_balance")
     private double accountBalance = 0.0;
+
+    @Column(name = "user_signup_date")
+    private LocalDateTime userSignupDate;
 
 
     @Override

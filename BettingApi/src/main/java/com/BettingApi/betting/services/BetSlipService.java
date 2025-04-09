@@ -85,6 +85,7 @@ public class BetSlipService {
         betslipDTO.setPick(betSlip.getPick());
         betslipDTO.setOdds(betSlip.getOdds());
         betslipDTO.setStatus(betSlip.getStatus());
+        betslipDTO.setBetSlipPlacedOn(betSlip.getBet().getBetPlacedOn());
 
         return betslipDTO;
     }
@@ -101,5 +102,11 @@ public class BetSlipService {
         List<BetSlip> betSlips = betSlipRepository.findByBet_BetId(betId);
         return betSlips.stream().map(this::convertToDto).collect(Collectors.toList());
 
+    }
+
+
+    public List<BetSlipDto> getAllBetSlips() {
+        List<BetSlip> betSlips = betSlipRepository.findAll();
+        return betSlips.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 }

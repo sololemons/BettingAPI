@@ -58,8 +58,13 @@ public class BetService {
         return betDto;
     }
 
-    public List <BetDto> getBetsById(Long id) {
+    public List<BetDto> getBetsById(Long id) {
         List<Bet> bets = betRepository.findByUsers_Id(id);
         return bets.stream().map(this::convertToDto).toList();
-}
+    }
+
+    public List<BetDto> getAllBets() {
+        List<Bet> bets = betRepository.findAll();
+        return bets.stream().map(this::convertToDto).toList();
+    }
 }

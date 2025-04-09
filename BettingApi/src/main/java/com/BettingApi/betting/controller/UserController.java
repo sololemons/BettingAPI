@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -22,6 +24,7 @@ public class UserController {
         Page<UserDto> userDtoPage = userService.getAllUsers(page, size);
         return ResponseEntity.ok(userDtoPage);
     }
+
     @GetMapping("/search")
     public ResponseEntity<Page<UserDto>> searchByPhoneNumber(
             @RequestParam String phoneNumber,
@@ -31,8 +34,14 @@ public class UserController {
         Page<UserDto> userDtoPage = userService.searchByPhoneNumber(phoneNumber, page, size);
         return ResponseEntity.ok(userDtoPage);
     }
+
     @GetMapping("/phoneNumber")
     public UserDto getUserByPhoneNumber(@RequestParam String phoneNumber) {
         return userService.getUserByPhoneNumber(phoneNumber);
+    }
+
+    @GetMapping("/alls")
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAll());
     }
 }

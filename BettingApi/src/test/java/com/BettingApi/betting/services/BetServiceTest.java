@@ -65,7 +65,7 @@ public class BetServiceTest {
 
         assertThat(betDto).isNotEmpty();
         assertThat(betDto.size()).isEqualTo(1);
-       assertThat(betDto.get(0).getBetID()).isEqualTo(1L);
+       assertThat(betDto.get(0).getBetId()).isEqualTo(1L);
 
         verify(userRepository, times(1)).findByPhoneNumber(testUser.getPhoneNumber());
         verify(betRepository, times(1)).findByUsers(testUser);

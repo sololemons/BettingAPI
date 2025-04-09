@@ -19,6 +19,7 @@ public class GamesService {
         List<Games> GamesList = repository.findAll();
         return GamesList.stream().map(this::convertToDto).collect(Collectors.toList());
     }
+
     private GamesDto convertToDto(Games Games) {
         GamesDto gamesDto = new GamesDto();
         gamesDto.setMatchId(Games.getMatchId());
