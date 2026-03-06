@@ -1,4 +1,4 @@
-Here is a modern and well-structured **README** file for your **Betting API**, following best practices.  
+
 
 ---
 
@@ -74,13 +74,7 @@ Run the `BettingApiApplication` class inside IntelliJ IDEA.
 
 ---
 
-## 📖 API Documentation  
 
-After starting the application, the **Swagger UI** documentation will be available at:  
-
-🔗 [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)  
-
----
 
 
 
